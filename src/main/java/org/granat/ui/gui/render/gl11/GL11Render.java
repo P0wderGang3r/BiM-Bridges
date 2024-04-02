@@ -1,5 +1,6 @@
 package org.granat.ui.gui.render.gl11;
 
+import lombok.Getter;
 import org.granat.controller.gui.ControllerCamera;
 import org.granat.controller.scene.ControllerScene;
 import org.granat.ui.gui.render.IRender;
@@ -65,14 +66,11 @@ public class GL11Render implements IRender {
     }
 
     private void loop() {
-        double startTime = System.currentTimeMillis() / 1000.0;
-        double currentTime;
-        int indexDelta = 2;
-        int count = 0;
-
         double[] sceneCoords = new double[3];
         double[] resultCoords = new double[3];
         double[][] pointModel = GL11Point.getTriangle();
+
+        GL11Optimization optimization = new GL11Optimization();
 
         var fixedParameters = new Object() {
             final double[] currentSceneRotation = new double[3];
@@ -94,11 +92,10 @@ public class GL11Render implements IRender {
 
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-            int finalIndexDelta = indexDelta;
             controllerScene.getPointClouds().forEach(pointCloud -> {
                 double[][] points = pointCloud.getPoints();
                 double[][] colors = pointCloud.getColors();
-                for (int index = 0; index < pointCloud.getAmount(); index += finalIndexDelta) {
+                for (int index = 0; index < pointCloud.getAmount(); index += optimization.getDelta()) {
                     sceneCoords[0] = points[index][0];
                     sceneCoords[1] = points[index][1];
                     sceneCoords[2] = points[index][2];
@@ -130,15 +127,7 @@ public class GL11Render implements IRender {
                 }
             });
 
-            count += 1;
-            currentTime = System.currentTimeMillis() / 1000.0;
-            if (currentTime >= startTime + 0.1) {
-                if (count < 4) indexDelta *= 2;
-                if (count > 6) indexDelta /= 2;
-                startTime = currentTime;
-                count = 0;
-            }
-
+            optimization.nextTick();
             glfwSwapBuffers(window.getWindow());
         }
     }

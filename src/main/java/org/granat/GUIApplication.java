@@ -71,10 +71,10 @@ public class GUIApplication {
         new Thread(this.server).start();
 
         //TODO: временное решение
-        //this.controllerScene.setWrapper("Хабаровск 51_руч.Чистый.e57");
+        this.controllerScene.setWrapper("Хабаровск 51_руч.Чистый.e57");
         //this.controllerScene.setWrapper("Хабаровск 69_Гобилли1.e57");
         //this.controllerScene.setWrapper("Ноябрьск объездная-853.e57");
-        this.controllerScene.setWrapper("Ноябрьск путепровод-779.e57");
+        //this.controllerScene.setWrapper("Ноябрьск путепровод-779.e57");
         this.controllerScene.pullData();
         this.controllerScene.pullBounds();
     }
