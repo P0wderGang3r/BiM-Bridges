@@ -1,9 +1,12 @@
 package org.granat.controller.gui;
 
 
+import lombok.Getter;
 import org.granat.ui.gui.input.*;
+import org.granat.ui.gui.input.keyboard.InputKeyboard;
 import org.granat.ui.gui.input.keyboard.InputKeyboardBinding;
 import org.granat.ui.gui.input.keyboard.InputKeyboardConfig;
+import org.granat.ui.gui.input.mouse.InputMouse;
 import org.granat.ui.gui.input.mouse.InputMouseBinding;
 import org.granat.ui.gui.input.mouse.InputMouseConfig;
 
@@ -13,7 +16,11 @@ public class ControllerInput {
 
     //?---------------------------------------------------------------------------------------------------------EXTERNAL
 
-    private final InputThread inputThread;
+    @Getter
+    private final InputKeyboard inputKeyboard;
+
+    @Getter
+    private final InputMouse inputMouse;
 
     private final InputKeyboardConfig inputKeyboardConfig;
 
@@ -25,11 +32,13 @@ public class ControllerInput {
     //?------------------------------------------------------------------------------------------------------CONSTRUCTOR
 
     public ControllerInput(
-            InputThread inputThread,
+            InputKeyboard inputKeyboard,
+            InputMouse inputMouse,
             InputKeyboardConfig inputKeyboardConfig,
             InputMouseConfig inputMouseConfig
     ) {
-        this.inputThread = inputThread;
+        this.inputKeyboard = inputKeyboard;
+        this.inputMouse = inputMouse;
         this.inputKeyboardConfig = inputKeyboardConfig;
         this.inputMouseConfig = inputMouseConfig;
     }
@@ -43,13 +52,13 @@ public class ControllerInput {
     }
 
     public Map<Integer, Boolean> getKeyboardKeys() {
-        return this.inputThread.getInputKeyboard().getKeys();
+        return this.inputKeyboard.getKeys();
     }
 
     //-------------------------------------------------------------------------------------------------------------MOUSE
 
     public Map<Integer, Boolean> getMouseKeys() {
-        return this.inputThread.getInputMouse().getKeys();
+        return this.inputMouse.getKeys();
     }
 
     public Map<Integer, InputMouseBinding> getMouseConfig() {
@@ -61,10 +70,10 @@ public class ControllerInput {
     }
 
     public double[] getMouseCursorMovement() {
-        return this.inputThread.getInputMouse().getDeltaCursorPos();
+        return this.inputMouse.getDeltaCursorPos();
     }
 
     public double[] getMouseScrollMovement() {
-        return  this.inputThread.getInputMouse().getDeltaScrollPos();
+        return  this.inputMouse.getDeltaScrollPos();
     }
 }

@@ -1,6 +1,8 @@
 package org.granat.ui.gui.input;
 
 import lombok.Getter;
+import org.granat.controller.gui.ControllerInput;
+import org.granat.controller.gui.ControllerOutput;
 import org.granat.ui.gui.input.keyboard.InputKeyboard;
 import org.granat.ui.gui.input.mouse.InputMouse;
 import org.granat.ui.gui.render.Window;
@@ -15,27 +17,56 @@ public class InputThread implements Runnable {
     private final Window window;
 
     @Getter
-    private final InputKeyboard inputKeyboard;
+    private final ControllerInput controllerInput;
 
     @Getter
-    private final InputMouse inputMouse;
-
+    private final ControllerOutput controllerOutput;
 
     //?---------------------------------------------------------------------------------------------------------INTERNAL
 
-    private final int tickrate = 100;
+    private final int tickrate = 250;
 
     private final int delta = 1000 / tickrate;
 
     //?-----------------------------------------------------------------------------------------------------CONSTRUCTORS
 
-    public InputThread(Window window, InputKeyboard inputKeyboard, InputMouse inputMouse) {
+    public InputThread(
+            Window window,
+            ControllerInput controllerInput,
+            ControllerOutput controllerOutput
+    ) {
         this.window = window;
-        this.inputKeyboard = inputKeyboard;
-        this.inputMouse = inputMouse;
+        this.controllerInput = controllerInput;
+        this.controllerOutput = controllerOutput;
     }
 
     //?----------------------------------------------------------------------------------------------------THREAD WORKER
+
+    Runnable nextTick = new Runnable() {
+        @Override
+        public void run() {
+            controllerInput.getKeyboardConfig().forEach((key, value) -> {
+                if (controllerInput.getKeyboardKeys().get(key) != null) {
+                    if (controllerInput.getKeyboardKeys().get(key)) {
+                        controllerOutput.doKeyboardInput(value);
+                    }
+                }
+            });
+            controllerInput.getMouseConfig().forEach((key, value) -> {
+                if (controllerInput.getMouseKeys().get(key) != null) {
+                    if (controllerInput.getMouseKeys().get(key)) {
+                        controllerOutput.doMouseCursorInput(
+                                value, controllerInput.getMouseCursorMovement(), controllerInput.getMouseSensitivity()
+                        );
+                    }
+                }
+                switch (key) {
+                    case -1 -> controllerOutput.doMouseScrollInput(value, controllerInput.getMouseScrollMovement());
+                    default -> { }
+                }
+            });
+        }
+    };
 
     @Override
     public void run() {
@@ -45,8 +76,9 @@ public class InputThread implements Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            controllerInput.getInputMouse().movement();
             GLFW.glfwPollEvents();
-            inputMouse.movement();
+            new Thread(nextTick).start();
         }
     }
 }

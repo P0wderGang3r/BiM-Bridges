@@ -3,6 +3,7 @@ package org.granat.ui.gui.render.gl11;
 import lombok.Getter;
 import org.granat.controller.gui.ControllerCamera;
 import org.granat.controller.scene.ControllerScene;
+import org.granat.scene.objects.Point;
 import org.granat.ui.gui.render.IRender;
 import org.granat.ui.gui.render.Window;
 import org.granat.ui.gui.render.gl11.utils.*;
@@ -68,6 +69,7 @@ public class GL11Render implements IRender {
     private void loop() {
         double[] sceneCoords = new double[3];
         double[] resultCoords = new double[3];
+        double[] color = new double[3];
         double[][] pointModel = GL11Point.getTriangle();
 
         GL11Optimization optimization = new GL11Optimization();
@@ -93,12 +95,16 @@ public class GL11Render implements IRender {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
             controllerScene.getPointClouds().forEach(pointCloud -> {
-                double[][] points = pointCloud.getPoints();
-                double[][] colors = pointCloud.getColors();
+                Point[] points = pointCloud.getPoints();
+
                 for (int index = 0; index < pointCloud.getAmount(); index += optimization.getDelta()) {
-                    sceneCoords[0] = points[index][0];
-                    sceneCoords[1] = points[index][1];
-                    sceneCoords[2] = points[index][2];
+                    sceneCoords[0] = points[index].getCoordinates()[0];
+                    sceneCoords[1] = points[index].getCoordinates()[1];
+                    sceneCoords[2] = points[index].getCoordinates()[2];
+
+                    color[0] = points[index].getColor()[0];
+                    color[1] = points[index].getColor()[1];
+                    color[2] = points[index].getColor()[2];
 
                     rotation.transform(sceneCoords, fixedParameters.currentSceneRotation);
                     position.transform(sceneCoords, fixedParameters.currentScenePosition);
@@ -116,7 +122,7 @@ public class GL11Render implements IRender {
                         resultCoords[2] = pointModel[vertex][2] + sceneCoords[2];
 
                         //System.out.println(data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
-                        GL11.glColor3d(colors[index][0], colors[index][1], colors[index][2]);
+                        GL11.glColor3d(color[0], color[1], color[2]);
                         GL11.glVertex3d(
                                 resultCoords[0],
                                 resultCoords[1],

@@ -1,5 +1,6 @@
 package org.granat;
 
+import org.granat.controller.gui.ControllerFileChooser;
 import org.granat.controller.gui.ControllerInput;
 import org.granat.controller.gui.ControllerOutput;
 import org.granat.controller.gui.ControllerCamera;
@@ -40,6 +41,8 @@ public class GUIApplication {
 
     private final ControllerOutput controllerOutput;
 
+    private final ControllerFileChooser controllerFileChooser;
+
     //?-----------------------------------------------------------------------------------------------------CONSTRUCTORS
 
     public GUIApplication() {
@@ -58,23 +61,34 @@ public class GUIApplication {
         InputMouseConfig inputMouseConfig = new InputMouseConfig();
         InputKeyboard inputKeyboard = new InputKeyboard(window);
         InputMouse inputMouse = new InputMouse(window);
-        this.inputThread = new InputThread(window, inputKeyboard, inputMouse);
-        this.controllerInput = new ControllerInput(inputThread, inputKeyboardConfig, inputMouseConfig);
+        this.controllerInput = new ControllerInput(inputKeyboard, inputMouse, inputKeyboardConfig, inputMouseConfig);
         this.controllerOutput = new ControllerOutput(this.controllerScene, this.controllerCamera);
+
+        //Создание нового обработчика пути до файла в файловой системе
+        FileChooser fileChooser = new FileChooser();
+        this.controllerFileChooser = new ControllerFileChooser(fileChooser);
 
         //Создаём новое окно отрисовки
         this.render = new GL11Render(window, controllerScene, controllerCamera);
         //Создаём пользовательский сервер
-        this.server = new Server(window, controllerInput, controllerOutput);
+        this.server = new Server(window, controllerScene, controllerInput);
+        //Создаём сервер ввода-вывода
+        this.inputThread = new InputThread(window, controllerInput, controllerOutput);
 
         new Thread(this.inputThread).start();
         new Thread(this.server).start();
 
-        //TODO: временное решение
-        this.controllerScene.setWrapper("Хабаровск 51_руч.Чистый.e57");
+        String filename;
+        do {
+            filename = fileChooser.getFilePath();
+        } while (filename == null || filename.isEmpty());
+
+        //this.controllerScene.setWrapper("Хабаровск 51_руч.Чистый.e57");
         //this.controllerScene.setWrapper("Хабаровск 69_Гобилли1.e57");
         //this.controllerScene.setWrapper("Ноябрьск объездная-853.e57");
         //this.controllerScene.setWrapper("Ноябрьск путепровод-779.e57");
+
+        this.controllerScene.setWrapper(filename);
         this.controllerScene.pullData();
         this.controllerScene.pullBounds();
     }
