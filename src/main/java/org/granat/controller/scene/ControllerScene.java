@@ -1,60 +1,45 @@
 package org.granat.controller.scene;
 
-import lombok.Getter;
 import org.granat.scene.Scene;
+import org.granat.scene.objects.Point;
 import org.granat.scene.objects.PointCloud;
-import org.granat.wrapper.IWrapper;
-import org.granat.wrapper.e57.WrapperE57;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Getter
-public class ControllerScene {
+public record ControllerScene(Scene scene) {
 
-    private final Scene scene;
+    //?-----------------------------------------------------------------------------------------------------------PUBLIC
 
-    private IWrapper wrapper;
-
-    //?-----------------------------------------------------------------------------------------------------CONSTRUCTORS
-
-    public ControllerScene(Scene scene) {
-        this.scene = scene;
+    public void clearScene() {
+        this.scene.getPointClouds().clear();
+        this.scene.setMaxBound(1.0);
     }
 
-    //?--------------------------------------------------------------------------------------------------------FUNCTIONS
-
-    public boolean setWrapper(String filePath) {
-        wrapper = new WrapperE57(filePath);
-        return wrapper.canBeOpened();
-    }
-
-    public void pullData() {
-        if (wrapper == null) return;
-        System.out.println(wrapper.getPointsNum());
-        PointCloud pointCloud = new PointCloud();
-        pointCloud.setPoints(this.wrapper.getData());
-        pointCloud.setPosition(new double[]{0, 0, -5});
-        pointCloud.setRotation(new double[]{0, 0, Math.PI / 2});
-        this.scene.getPointClouds().add(pointCloud);
-    }
-
-    public void pullBounds() {
-        if (wrapper == null) return;
-        Arrays.stream(wrapper.getPointsBounds()).forEach(bound -> this.scene.setMaxBound(
-                Math.max(this.scene.getMaxBound(), Math.abs(bound))));
-    }
-
-    public boolean isEmpty() {
+    public boolean isEmptyScene() {
         if (!this.scene.getPointClouds().isEmpty())
             return this.scene.getPointClouds().get(0).getPoints().length != 0;
         return false;
     }
 
-    public List<PointCloud> getPointClouds() {
-        return this.scene.getPointClouds();
+    public void addPointCloud(PointCloud pointCloud) {
+        if (pointCloud != null && pointCloud.getPoints().length > 0)
+            this.scene.getPointClouds().add(pointCloud);
+    }
+
+    public Stream<Point> getPoints() {
+        return this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream);
+    }
+
+    public Stream<Point[]> getPointArrays() {
+        return this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints);
+    }
+
+    public void setMaxBound(double maxBound) {
+        if (maxBound >= 0) this.scene.setMaxBound(maxBound);
     }
 
     public double getMaxBound() {
@@ -64,11 +49,6 @@ public class ControllerScene {
     public double getMaxBoundDivider() {
         return this.scene.getMaxBoundDivider();
     }
-
-    public void clearPointsData() {
-        this.scene.getPointClouds().clear();
-    }
-
 
     public void addRotation(double[] addition, double sensitivity) {
         scene.getRotation()[0] += addition[0] * sensitivity;

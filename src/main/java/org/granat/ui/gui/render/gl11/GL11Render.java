@@ -1,12 +1,12 @@
 package org.granat.ui.gui.render.gl11;
 
-import lombok.Getter;
 import org.granat.controller.gui.ControllerCamera;
 import org.granat.controller.scene.ControllerScene;
-import org.granat.scene.objects.Point;
+import org.granat.controller.server.ControllerServer;
 import org.granat.ui.gui.render.IRender;
 import org.granat.ui.gui.render.Window;
 import org.granat.ui.gui.render.gl11.utils.*;
+import org.granat.ui.gui.runtime.State;
 import org.lwjgl.opengl.*;
 
 import java.util.*;
@@ -24,6 +24,10 @@ public class GL11Render implements IRender {
 
     private final ControllerCamera controllerCamera;
 
+    private final ControllerServer controllerServer;
+
+    //?---------------------------------------------------------------------------------------------------------INTERNAL
+
     private final IGL11Transform rotation = GL11Rotation::rotate;
 
     private final IGL11Transform position = GL11Position::position;
@@ -32,21 +36,24 @@ public class GL11Render implements IRender {
 
     private final IGL11Transform perspective = GL11Perspective::perspective;
 
-    //?---------------------------------------------------------------------------------------------------------INTERNAL
-
     GL11Point GL11Point = new GL11Point();
 
     private final double near = -5;
 
     private final double far = 5;
 
-    //?-----------------------------------------------------------------------------------------------------------------
+    //?------------------------------------------------------------------------------------------------------CONSTRUCTOR
 
-    public GL11Render(Window window, ControllerScene controllerScene, ControllerCamera controllerCamera) {
-
+    public GL11Render(
+            Window window,
+            ControllerScene controllerScene,
+            ControllerCamera controllerCamera,
+            ControllerServer controllerServer)
+    {
         this.window = window;
         this.controllerScene = controllerScene;
         this.controllerCamera = controllerCamera;
+        this.controllerServer = controllerServer;
 
         GL.createCapabilities();
 
@@ -81,7 +88,8 @@ public class GL11Render implements IRender {
         };
 
         while ( !glfwWindowShouldClose(window.getWindow()) ) {
-            if (!controllerScene.isEmpty()) continue;
+            if (!controllerScene.isEmptyScene()) continue;
+            if (controllerServer.getServer().getCurrentState() == State.READING) continue;
 
             for (int index = 0; index < 3; index++) {
                 fixedParameters.currentSceneRotation[index] = controllerScene.getRotation()[index];
@@ -94,10 +102,8 @@ public class GL11Render implements IRender {
 
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-            controllerScene.getPointClouds().forEach(pointCloud -> {
-                Point[] points = pointCloud.getPoints();
-
-                for (int index = 0; index < pointCloud.getAmount(); index += optimization.getDelta()) {
+            controllerScene.getPointArrays().forEach(points -> {
+                for (int index = 0; index < points.length; index += optimization.getDelta()) {
                     sceneCoords[0] = points[index].getCoordinates()[0];
                     sceneCoords[1] = points[index].getCoordinates()[1];
                     sceneCoords[2] = points[index].getCoordinates()[2];

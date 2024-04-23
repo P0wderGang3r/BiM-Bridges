@@ -3,8 +3,6 @@ package org.granat.ui.gui.input;
 import lombok.Getter;
 import org.granat.controller.gui.ControllerInput;
 import org.granat.controller.gui.ControllerOutput;
-import org.granat.ui.gui.input.keyboard.InputKeyboard;
-import org.granat.ui.gui.input.mouse.InputMouse;
 import org.granat.ui.gui.render.Window;
 import org.lwjgl.glfw.GLFW;
 

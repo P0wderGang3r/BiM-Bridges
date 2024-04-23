@@ -1,10 +1,12 @@
-package org.granat.ui.gui.input;
+package org.granat.files;
+
+import org.granat.files.IFileChooser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class FileChooser {
+public class FileChooserGUI implements IFileChooser {
 
     //?-----------------------------------------------------------------------------------------------------------PUBLIC
 
@@ -12,17 +14,17 @@ public class FileChooser {
      * Извлекает путь до нового файла
      * @return полный путь до файла в файловой системе
      */
+    @Override
     public String getFilePath() {
         JFrame frame = new JFrame();
         FileDialog fd = new FileDialog(frame, "Choose a file", FileDialog.LOAD);
         fd.setFile("*.e57");
         fd.setVisible(true);
         frame.dispose();
-        String filename = fd.getFile();
+        String filename = fd.getDirectory() + fd.getFile();
         System.out.println(
                 Objects.requireNonNullElse(filename, "Отказ от выбора файла.")
         );
-
         return filename;
     }
 }

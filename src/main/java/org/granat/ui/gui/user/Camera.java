@@ -13,7 +13,7 @@ public class Camera {
 
     private double maxFov = 150;
 
-    private double minFov = 30;
+    private double minFov = 15;
 
     private double deltaFov = 2;
 

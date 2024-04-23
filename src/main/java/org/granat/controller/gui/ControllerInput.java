@@ -12,36 +12,12 @@ import org.granat.ui.gui.input.mouse.InputMouseConfig;
 
 import java.util.Map;
 
-public class ControllerInput {
-
-    //?---------------------------------------------------------------------------------------------------------EXTERNAL
-
-    @Getter
-    private final InputKeyboard inputKeyboard;
-
-    @Getter
-    private final InputMouse inputMouse;
-
-    private final InputKeyboardConfig inputKeyboardConfig;
-
-    private final InputMouseConfig inputMouseConfig;
-
-    //?---------------------------------------------------------------------------------------------------------INTERNAL
-
-
-    //?------------------------------------------------------------------------------------------------------CONSTRUCTOR
-
-    public ControllerInput(
-            InputKeyboard inputKeyboard,
-            InputMouse inputMouse,
-            InputKeyboardConfig inputKeyboardConfig,
-            InputMouseConfig inputMouseConfig
-    ) {
-        this.inputKeyboard = inputKeyboard;
-        this.inputMouse = inputMouse;
-        this.inputKeyboardConfig = inputKeyboardConfig;
-        this.inputMouseConfig = inputMouseConfig;
-    }
+public record ControllerInput(
+        @Getter InputKeyboard inputKeyboard,
+        @Getter InputMouse inputMouse,
+        InputKeyboardConfig inputKeyboardConfig,
+        InputMouseConfig inputMouseConfig
+) {
 
     //?--------------------------------------------------------------------------------------------------------FUNCTIONS
 
@@ -74,6 +50,6 @@ public class ControllerInput {
     }
 
     public double[] getMouseScrollMovement() {
-        return  this.inputMouse.getDeltaScrollPos();
+        return this.inputMouse.getDeltaScrollPos();
     }
 }

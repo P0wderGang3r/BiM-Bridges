@@ -23,7 +23,8 @@ public class GL11Optimization {
     }
 
     private void incDelta() {
-        delta *= 2;
+        if (delta < 65536) delta *= 2;
+        else delta = 65536;
     }
 
     private void decDelta() {

@@ -1,24 +1,10 @@
 package org.granat.controller.gui;
 
-import lombok.Getter;
-import org.granat.ui.gui.input.FileChooser;
+import org.granat.files.IFileChooser;
 
-public class ControllerFileChooser {
-
-    //?---------------------------------------------------------------------------------------------------------EXTERNAL
-
-    @Getter
-    private final FileChooser fileChooser;
-
-    //?---------------------------------------------------------------------------------------------------------INTERNAL
-
-
-    //?------------------------------------------------------------------------------------------------------CONSTRUCTOR
-
-
-    public ControllerFileChooser(FileChooser fileChooser) {
-        this.fileChooser = fileChooser;
-    }
+public record ControllerFileChooser(
+        IFileChooser fileChooser
+) {
 
     //?--------------------------------------------------------------------------------------------------------FUNCTIONS
 

@@ -1,23 +1,10 @@
 package org.granat.controller.gui;
 
-
 import org.granat.ui.gui.user.Camera;
 
-public class ControllerCamera {
-
-    //?---------------------------------------------------------------------------------------------------------EXTERNAL
-
-    private final Camera camera;
-
-    //?---------------------------------------------------------------------------------------------------------INTERNAL
-
-
-
-    //?------------------------------------------------------------------------------------------------------CONSTRUCTOR
-
-    public ControllerCamera(Camera camera) {
-        this.camera = camera;
-    }
+public record ControllerCamera(
+        Camera camera
+) {
 
     //?--------------------------------------------------------------------------------------------------------FUNCTIONS
 

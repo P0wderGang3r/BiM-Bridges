@@ -4,7 +4,12 @@ import org.granat.controller.gui.ControllerFileChooser;
 import org.granat.controller.gui.ControllerInput;
 import org.granat.controller.gui.ControllerOutput;
 import org.granat.controller.gui.ControllerCamera;
+import org.granat.controller.filters.ControllerFilters;
 import org.granat.controller.scene.ControllerScene;
+import org.granat.controller.server.ControllerServer;
+import org.granat.controller.wrapper.ControllerWrapper;
+import org.granat.files.FileChooserGUI;
+import org.granat.files.IFileChooser;
 import org.granat.scene.Scene;
 import org.granat.ui.gui.input.*;
 import org.granat.ui.gui.input.keyboard.InputKeyboard;
@@ -31,74 +36,60 @@ public class GUIApplication {
 
     private final InputThread inputThread;
 
-    //?------------------------------------------------------------------------------------------------------CONTROLLERS
-
-    private final ControllerScene controllerScene;
-
-    private final ControllerCamera controllerCamera;
-
-    private final ControllerInput controllerInput;
-
-    private final ControllerOutput controllerOutput;
-
-    private final ControllerFileChooser controllerFileChooser;
-
     //?-----------------------------------------------------------------------------------------------------CONSTRUCTORS
 
     public GUIApplication() {
+        //Инициализация нового окна отрисовки
         Window window = new Window();
 
-        //Создание контроллера всей сцены
+        //Инициализация контроллера пути до файла в файловой системе
+        IFileChooser fileChooser = new FileChooserGUI();
+        ControllerFileChooser controllerFileChooser = new ControllerFileChooser(fileChooser);
+
+        //Инициализация контроллера всей сцены
         Scene scene = new Scene();
-        this.controllerScene = new ControllerScene(scene);
+        ControllerScene controllerScene = new ControllerScene(scene);
 
-        //Создание контроллера направления пользовательского взгляда
+        //Инициализация контроллера оболочки вокруг файла
+        ControllerWrapper controllerWrapper = new ControllerWrapper(controllerScene, controllerFileChooser);
+
+        //Инициализация контроллера фильтрации во множестве точек
+        ControllerFilters controllerFilters = new ControllerFilters(controllerScene);
+
+        //Инициализация контроллера направления пользовательского взгляда
         Camera camera = new Camera();
-        this.controllerCamera = new ControllerCamera(camera);
+        ControllerCamera controllerCamera = new ControllerCamera(camera);
 
-        //Создание контроллера ввода/вывода для мыши и клавиатуры
+        //Инициализация подсистемы обработки длительных событий
+        this.server = new Server(window);
+        ControllerServer controllerServer = new ControllerServer(this.server);
+
+        //Инициализация подсистемы ввода-вывода для клавиатуры и мыши
         InputKeyboardConfig inputKeyboardConfig = new InputKeyboardConfig();
         InputMouseConfig inputMouseConfig = new InputMouseConfig();
         InputKeyboard inputKeyboard = new InputKeyboard(window);
         InputMouse inputMouse = new InputMouse(window);
-        this.controllerInput = new ControllerInput(inputKeyboard, inputMouse, inputKeyboardConfig, inputMouseConfig);
-        this.controllerOutput = new ControllerOutput(this.controllerScene, this.controllerCamera);
-
-        //Создание нового обработчика пути до файла в файловой системе
-        FileChooser fileChooser = new FileChooser();
-        this.controllerFileChooser = new ControllerFileChooser(fileChooser);
-
-        //Создаём новое окно отрисовки
-        this.render = new GL11Render(window, controllerScene, controllerCamera);
-        //Создаём пользовательский сервер
-        this.server = new Server(window, controllerScene, controllerInput);
-        //Создаём сервер ввода-вывода
+        ControllerInput controllerInput = new ControllerInput(inputKeyboard, inputMouse, inputKeyboardConfig, inputMouseConfig);
+        ControllerOutput controllerOutput = new ControllerOutput(controllerScene, controllerWrapper, controllerCamera, controllerFilters, controllerServer);
         this.inputThread = new InputThread(window, controllerInput, controllerOutput);
 
-        new Thread(this.inputThread).start();
-        new Thread(this.server).start();
+        //Инициализация подсистемы графического вывода
+        this.render = new GL11Render(window, controllerScene, controllerCamera, controllerServer);
 
-        String filename;
-        do {
-            filename = fileChooser.getFilePath();
-        } while (filename == null || filename.isEmpty());
-
-        //this.controllerScene.setWrapper("Хабаровск 51_руч.Чистый.e57");
-        //this.controllerScene.setWrapper("Хабаровск 69_Гобилли1.e57");
-        //this.controllerScene.setWrapper("Ноябрьск объездная-853.e57");
-        //this.controllerScene.setWrapper("Ноябрьск путепровод-779.e57");
-
-        this.controllerScene.setWrapper(filename);
-        this.controllerScene.pullData();
-        this.controllerScene.pullBounds();
+        //Извлекаем сцену из одного файла
+        new Thread(controllerWrapper::loadSingleScene).start();
     }
 
     //?-----------------------------------------------------------------------------------------------------------------
 
     public void run() {
+        //Запуск сервера обработки длительных событий
+        new Thread(this.server).start();
+        //Запуск подсистемы ввода-вывода
+        new Thread(this.inputThread).start();
+        //Запуск подсистемы графического вывода
         render.run();
     }
 
     //?-----------------------------------------------------------------------------------------------------------------
-
 }

@@ -1,7 +1,6 @@
 package org.granat.scene;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.granat.scene.objects.PointCloud;
 
 import java.util.ArrayList;
@@ -25,13 +24,11 @@ public class Scene {
     //?-------------------------------------------------------------------------------------------------------SCENE DATA
 
     List<PointCloud> pointClouds;
-    List<PointCloud> filteredPointClouds;
 
     //?-----------------------------------------------------------------------------------------------------CONSTRUCTORS
 
     public Scene() {
         this.pointClouds = new ArrayList<>();
-        this.filteredPointClouds = new ArrayList<>();
     }
 
     //?----------------------------------------------------------------------------------------------------------SETTERS

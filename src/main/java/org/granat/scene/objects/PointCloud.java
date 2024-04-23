@@ -43,7 +43,7 @@ public class PointCloud {
         this.points = new Point[data.length];
         for (int index = 0; index < data.length; index++) {
             points[index] = new Point();
-            points[index].setCoordinates(data[index].clone());
+            points[index].setCoordinates(data[index]);
             points[index].setIntensity(data[index][3]);
         }
         this.amount = this.points.length;
