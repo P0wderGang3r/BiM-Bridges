@@ -10,6 +10,12 @@ public record ControllerFilters(
 ) {
     //?--------------------------------------------------------------------------------------------------------FUNCTIONS
 
+    public void runEmptyFilter() {
+        System.out.println("STARTED EMPTY FILTER: " + this.getClass());
+        Filters.EMPTY.filter(controllerScene);
+        System.out.println("ENDED EMPTY FILTER: " + this.getClass());
+    }
+
     /**
      *
      * @param parameters "position" - parameter position in {@link org.granat.scene.objects.Point Point},

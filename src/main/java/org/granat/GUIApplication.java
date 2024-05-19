@@ -84,11 +84,16 @@ public class GUIApplication {
 
     public void run() {
         //Запуск сервера обработки длительных событий
-        new Thread(this.server).start();
+        Thread server = new Thread(this.server);
+        server.start();
         //Запуск подсистемы ввода-вывода
-        new Thread(this.inputThread).start();
+        Thread inputThread = new Thread(this.inputThread);
+        inputThread.start();
         //Запуск подсистемы графического вывода
         render.run();
+
+        server.interrupt();
+        inputThread.interrupt();
     }
 
     //?-----------------------------------------------------------------------------------------------------------------

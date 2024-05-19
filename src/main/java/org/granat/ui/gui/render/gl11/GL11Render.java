@@ -102,8 +102,10 @@ public class GL11Render implements IRender {
 
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-            controllerScene.getPointArrays().forEach(points -> {
+            controllerScene.getDrawablePointsStream().forEach(points -> {
                 for (int index = 0; index < points.length; index += optimization.getDelta()) {
+                    if (!points[index].getFilterValue(controllerScene.getCurrentFilter())) continue;
+
                     sceneCoords[0] = points[index].getCoordinates()[0];
                     sceneCoords[1] = points[index].getCoordinates()[1];
                     sceneCoords[2] = points[index].getCoordinates()[2];
@@ -122,13 +124,13 @@ public class GL11Render implements IRender {
                     });
 
                     GL11.glBegin(GL11.GL_TRIANGLES);
+                    GL11.glColor3d(color[0], color[1], color[2]);
                     for (int vertex = 0; vertex < 3; vertex++) {
                         resultCoords[0] = pointModel[vertex][0] + sceneCoords[0];
                         resultCoords[1] = pointModel[vertex][1] + sceneCoords[1];
                         resultCoords[2] = pointModel[vertex][2] + sceneCoords[2];
 
                         //System.out.println(data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
-                        GL11.glColor3d(color[0], color[1], color[2]);
                         GL11.glVertex3d(
                                 resultCoords[0],
                                 resultCoords[1],

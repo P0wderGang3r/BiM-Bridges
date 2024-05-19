@@ -6,8 +6,6 @@ import org.granat.controller.server.ControllerServer;
 import org.granat.controller.wrapper.ControllerWrapper;
 import org.granat.ui.gui.input.keyboard.InputKeyboardBinding;
 import org.granat.ui.gui.input.mouse.InputMouseBinding;
-import org.granat.ui.gui.render.Window;
-import org.granat.ui.gui.runtime.Server;
 import org.granat.ui.gui.runtime.State;
 
 import java.util.List;
@@ -31,11 +29,41 @@ public record ControllerOutput(
                         State.READING,
                         List.of(controllerWrapper::loadSingleScene));
                 break;
+
+            case FILTER_EMPTY:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerFilters::runEmptyFilter));
+                break;
             case FILTER_DENSITY:
                 controllerServer.setPendingOperation(
                         State.RUNNING,
                         List.of(controllerFilters::runDensityPreprocess,
-                                controllerFilters::runDensityFilter));
+                                controllerFilters::runDensityFilter,
+                                controllerScene::updateDensitySceneParameter,
+                                controllerScene::resetColorGradationDensity));
+                break;
+
+            case SHOW_INTENSITY:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setColorGradationIntensity));
+                break;
+            case SHOW_DENSITY:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setColorGradationDensity));
+                break;
+
+            case SHOW_FILTER_EMPTY:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setEmptyFilter));
+                break;
+            case SHOW_FILTER_DENSITY:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setDensityFilter));
                 break;
             default:
                 break;

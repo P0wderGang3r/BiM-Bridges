@@ -63,15 +63,15 @@ public class FilterDensity {
         //Устанавливаем в ноль значение параметра веса каждой точки
         pointsStreamSupplier.get().forEach(point -> point.setDensityParameterValue(0));
 
-        //Перемещения среза за "такт"
-        double delta = parameters.get("delta") / 2;
         double bound = parameters.get("bound");
 
         //Проходимся по каждому измерению dimension - оси oX, oY, oZ
         for (int dimension = 0; dimension < 3; dimension++) {
+            //Перемещения среза за "такт"
+            double delta = parameters.get("delta-" + dimension) / 2;
             //Проходимся по каждому срезу в рамках измерения dimension
             for (double slice = 0 - bound - delta;
-                 slice < bound + delta; slice += delta) {
+                 slice < bound + delta; slice += 0.1) {
                 //Ищем количество точек в срезе
                 long numberOfPointsInSlice = accumulateNumberOfPointsInSlice(
                         pointsStreamSupplier.get(), dimension, slice, delta);

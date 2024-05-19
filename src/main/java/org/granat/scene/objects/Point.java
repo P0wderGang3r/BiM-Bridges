@@ -2,6 +2,7 @@ package org.granat.scene.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.granat.scene.enums.ColorGradation;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ public class Point {
     //?-----------------------------------------------------------------------------------------------------------CONSTS
 
     @Getter
-    private final static int densityPosition = 0;
+    private final static byte densityPosition = 0;
 
     //?-------------------------------------------------------------------------------------------------------------DATA
 
@@ -33,27 +34,30 @@ public class Point {
     //?----------------------------------------------------------------------------------------------------------GETTERS
 
     public double[] getCoordinates() throws NullPointerException {
-        if (this.coordinates == null)
-            throw new NullPointerException("Warning: dots was not correctly initialized.");
-        return this.coordinates;
+        if (this.coordinates != null)
+            return this.coordinates;
+        System.out.println("Warning: point was not correctly initialized. Class: " + this.getClass());
+        return new double[] {0.0, 0.0, 0.0};
     }
 
     public double[] getColor() {
-        if (this.color == null) {
-            this.color = new double[3];
-            this.color[0] = this.intensity;
-            this.color[1] = this.intensity;
-            this.color[2] = this.intensity;
-        }
+        if (this.color != null) return this.color;
+
+        this.color = new double[3];
+        ColorGradation.INTENSITY.setColor(this, new double[0]);
         return this.color;
     }
 
     public long getDensityParameterValue() {
-        return parameters[densityPosition];
+        if (this.parameters != null && this.parameters.length > densityPosition)
+            return parameters[densityPosition];
+        return 1;
     }
 
-    public boolean getDensityFiltersValue() {
-        return filters[densityPosition];
+    public boolean getFilterValue(int position) {
+        if (position > -1 && this.filters != null && this.filters.length > position)
+            return filters[position];
+        return true;
     }
 
     //?----------------------------------------------------------------------------------------------------------SETTERS
@@ -76,22 +80,6 @@ public class Point {
         return true;
     }
 
-    private boolean notNullFilterValue(int position, boolean value) {
-        if (this.filters == null) {
-            this.filters = new boolean[position + 1];
-            this.filters[position] = value;
-            return false;
-        } else if (this.filters.length < position + 1) {
-            boolean[] newFilters = new boolean[position + 1];
-            System.arraycopy(this.filters, 0, newFilters, 0, this.filters.length);
-            newFilters[position] = false;
-            this.filters = newFilters;
-            return false;
-        }
-
-        return true;
-    }
-
     private void setParameterValue(int position, long value) {
         if (this.notNullParameterValue(position, value)) {
             this.parameters[position] = value;
@@ -104,9 +92,25 @@ public class Point {
         }
     }
 
+    private boolean notNullFilterValue(int position, boolean value) {
+        if (this.filters == null) {
+            this.filters = new boolean[position + 1];
+            this.filters[position] = value;
+            return false;
+        } else if (this.filters.length < position + 1) {
+            boolean[] newFilters = new boolean[position + 1];
+            System.arraycopy(this.filters, 0, newFilters, 0, this.filters.length);
+            newFilters[position] = value;
+            this.filters = newFilters;
+            return false;
+        }
+
+        return true;
+    }
+
     private void setFilterValue(int position, boolean value) {
         if (this.notNullFilterValue(position, value)) {
-            this.filters[position] = value;
+            filters[position] = value;
         }
     }
 

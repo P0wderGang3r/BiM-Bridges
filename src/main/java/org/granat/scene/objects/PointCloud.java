@@ -56,7 +56,7 @@ public class PointCloud {
                     transformation.transform(point.getCoordinates(), Arrays.stream(this.position).map(value -> -value).toArray());
                     transformation.transform(point.getCoordinates(), newPosition);
                 });
-        System.arraycopy(newPosition, 0, this.position, 0, 3);
+        this.position = newPosition;
     }
 
     public void setRotation(double[] newRotation) {
@@ -66,7 +66,7 @@ public class PointCloud {
                     transformation.transform(point.getCoordinates(), Arrays.stream(this.rotation).map(value -> -value).toArray());
                     transformation.transform(point.getCoordinates(), newRotation);
                 });
-        System.arraycopy(newRotation, 0, this.rotation, 0, 3);
+        this.rotation = newRotation;
     }
 
     //?------------------------------------------------------------------------------------------------------------UTILS
