@@ -1,7 +1,7 @@
 package org.granat.controller.filters;
 
 import org.granat.controller.scene.ControllerScene;
-import org.granat.filters.Filters;
+import org.granat.processors.Processors;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ public record ControllerFilters(
 
     public void runEmptyFilter() {
         System.out.println("STARTED EMPTY FILTER: " + this.getClass());
-        Filters.EMPTY.filter(controllerScene);
+        Processors.EMPTY.process(controllerScene);
         System.out.println("ENDED EMPTY FILTER: " + this.getClass());
     }
 
@@ -22,18 +22,18 @@ public record ControllerFilters(
      *                   "delta" - slice "thickness"
      */
     public void setDensityFilterParameters(Map<String, Double> parameters) {
-        Filters.DENSITY.setParameters(parameters);
+        Processors.DENSITY.setParameters(parameters);
     }
 
     public void runDensityPreprocess() {
         System.out.println("STARTED DENSITY PREPROCESS: " + this.getClass());
-        Filters.DENSITY.preprocess(controllerScene);
+        Processors.DENSITY.preprocess(controllerScene);
         System.out.println("ENDED DENSITY PREPROCESS: " + this.getClass());
     }
 
     public void runDensityFilter() {
         System.out.println("STARTED DENSITY FILTER: " + this.getClass());
-        Filters.DENSITY.filter(controllerScene);
+        Processors.DENSITY.process(controllerScene);
         System.out.println("ENDED DENSITY FILTER: " + this.getClass());
     }
 }

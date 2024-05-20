@@ -1,4 +1,4 @@
-package org.granat.filters;
+package org.granat.processors.filters;
 
 import org.granat.scene.objects.Point;
 
@@ -57,7 +57,7 @@ public class FilterDensity {
      * Функция, считающая количество точек, попавших во множество срезов в каждом из измерений,
      * и записывающая "вес" каждой точки в её соответствующий параметр.
      * @param pointsStreamSupplier потоки точек пространства.
-     * @param parameters "delta" - дельта оценивания; "bound" - граничное значение пространства.
+     * @param parameters "epsilon" - разброс точек от центра среза; "delta" - изменение координаты среза; "bound" - граничное значение пространства.
      */
     public static void preprocess(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
         //Устанавливаем в ноль значение параметра веса каждой точки
@@ -67,17 +67,20 @@ public class FilterDensity {
 
         //Проходимся по каждому измерению dimension - оси oX, oY, oZ
         for (int dimension = 0; dimension < 3; dimension++) {
+            if (parameters.get("epsilon-" + dimension) == null) return;
+            //Допустимый разброс точек среза
+            double epsilon = parameters.get("epsilon-" + dimension) / 2;
             //Перемещения среза за "такт"
             double delta = parameters.get("delta-" + dimension) / 2;
             //Проходимся по каждому срезу в рамках измерения dimension
-            for (double slice = 0 - bound - delta;
-                 slice < bound + delta; slice += 0.1) {
+            for (double slice = 0 - bound - epsilon;
+                 slice < bound + epsilon; slice += delta) {
                 //Ищем количество точек в срезе
                 long numberOfPointsInSlice = accumulateNumberOfPointsInSlice(
-                        pointsStreamSupplier.get(), dimension, slice, delta);
+                        pointsStreamSupplier.get(), dimension, slice, epsilon);
                 //Записываем количество точек в срезе в соответствующий параметр каждой точки
                 updateParameterValue(
-                        pointsStreamSupplier.get(), dimension, slice, delta, numberOfPointsInSlice);
+                        pointsStreamSupplier.get(), dimension, slice, epsilon, numberOfPointsInSlice);
             }
         }
     }
