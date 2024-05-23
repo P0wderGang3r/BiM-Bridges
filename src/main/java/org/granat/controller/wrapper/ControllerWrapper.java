@@ -54,6 +54,10 @@ public class ControllerWrapper {
                 .orElse(1.0));
     }
 
+    private void detachWrapper() {
+        this.wrapper = null;
+    }
+
     //?-----------------------------------------------------------------------------------------------------------PUBLIC
 
     public void loadSingleScene() {
@@ -64,6 +68,7 @@ public class ControllerWrapper {
         this.controllerScene.clearScene();
         this.pullData();
         this.pullBounds();
+        detachWrapper();
     }
 
     //?-----------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,11 @@
 package org.granat.processors.helpers;
 
+import org.granat.scene.objects.Point;
+
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 /*
 2.2.2 Метод – вычисление карты высот
 Большая часть алгоритмов в рамках разработанной последовательности решения
@@ -19,15 +25,7 @@ package org.granat.processors.helpers;
 ·	выполняя проход по всем точками из входного множества точек,
     записывается максимальное (или минимальное) значение координаты Z в матрицу NxN
     по соответствующим ей координатам X и Y каждой текущей точки.
-
  */
-
-import org.granat.scene.objects.Point;
-
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-
 public class HelperHeightMap {
 
     /**
@@ -51,14 +49,19 @@ public class HelperHeightMap {
         //Номер измерения, с которого снимаются значения для матрицы
         int axisVal = parameters.get("axis-val").intValue();
 
-        Map<String, Object> matrix = new HashMap<>(rows * cols);
+        Map<String, Object> matrix = new HashMap<>();
+
+        matrix.put("rows", rows);
+        matrix.put("cols", cols);
 
         pointsStreamSupplier.get().forEach(
                 point -> {
+                    //Ставим в соответствие координате строку от 0 до rows
                     int row = (int) ((point.getCoordinates()[axisRow] + 1) * rows);
+                    //Ставим в соответствие координате столбец от 0 до cols
                     int col = (int) ((point.getCoordinates()[axisCol] + 1) * cols);
-                    matrix.put("" + row + '-' + col, Math.max(
-                            matrix.get("" + row + '-' + col) == null ? -1 : (double) matrix.get("" + row + '-' + col),
+                    matrix.put(row + "-" + col, Math.max(
+                            matrix.get(row + "-" + col) == null ? -1 : (double) matrix.get("" + row + '-' + col),
                             point.getCoordinates()[axisVal]));
                 });
 
