@@ -2,10 +2,8 @@ package org.granat.processors;
 
 import org.granat.controller.scene.ControllerScene;
 import org.granat.processors.filters.FilterDensity;
-import org.granat.processors.filters.FilterGirder;
+import org.granat.processors.helpers.HelperDensity;
 import org.granat.processors.filters.IFilter;
-import org.granat.processors.helpers.HelperHeightMap;
-import org.granat.processors.helpers.IHelper;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
@@ -34,11 +32,11 @@ public enum Processors {
 
         private void initParameters(ControllerScene controllerScene) {
             parameters.put("bound", controllerScene.getMaxBound());
-            parameters.putIfAbsent("epsilon-0", 0.3 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("epsilon-1", 0.3 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("epsilon-2", 0.1 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("delta", 0.1 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("threshold", 5 * 1000000.0);
+            parameters.putIfAbsent("epsilon-0", 0.5 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("epsilon-1", 0.5 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("epsilon-2", 0.00125 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("delta", 0.05 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("threshold", 24 * 1000000.0);
         }
 
         public void setParameters(Map<String, Double> parameters) {
@@ -69,9 +67,9 @@ public enum Processors {
     GIRDER {
         final Map<String, Double> parameters = new HashMap<>();
 
-        final IFilter preprocessor = FilterGirder::preprocess;
+        final IFilter preprocessor = FilterDensity::preprocess;
 
-        final IFilter processor = FilterGirder::filter;
+        final IFilter processor = FilterDensity::filter;
 
         private void initParameters(ControllerScene controllerScene) {
 

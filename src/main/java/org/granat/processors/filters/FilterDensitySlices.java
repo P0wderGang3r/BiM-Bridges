@@ -3,11 +3,10 @@ package org.granat.processors.filters;
 import org.granat.scene.objects.Point;
 
 import java.util.Map;
-import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class FilterDensity {
+public class FilterDensitySlices {
 
     /**
      * Проход по каждой точке в срезе,
@@ -52,22 +51,6 @@ public class FilterDensity {
         });
 
         return numberOfPointsInSlice.value;
-    }
-
-    private static BinaryOperator<Boolean> distanceFunction = (point1, point2) -> {
-        return ;
-    };
-
-    private static void doAccumulation(
-            Supplier<Stream<Point>> pointsStream,
-            double distance) {
-        pointsStream.get().forEach(point1 -> {
-            pointsStream.get().forEach(point2 -> {
-                if (point1 != point2) {
-                    if (p)
-                }
-            });
-        });
     }
 
     /**
