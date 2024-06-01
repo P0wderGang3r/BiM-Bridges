@@ -1,4 +1,4 @@
-package org.granat.processors.helpers;
+package org.granat.processors.algo;
 
 import org.granat.scene.objects.Point;
 
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 ·	вычисляется угол наклона по оставшимся значениям матрицы.
 
  */
-public class HelperTilt implements IHelper {
+public class AlgoTilt {
 
     private Double getMaxHeight(Map<String, Double> matrix, int rows, int cols) {
         Double maxHeight = -1.0;
@@ -62,24 +62,32 @@ public class HelperTilt implements IHelper {
     }
 
     /**
-     * @param matrix карта высот; rows, cols - размерность карты высот
-     * @return "deg-1" - угол наклона по первой оси, "deg-2" - угол наклона по второй оси
+     * @param pointsStreamSupplier потоки точек пространства.
+     * @param parameters "epsilon" - разброс точек от центра среза; "delta" - изменение координаты среза; "bound" - граничное значение пространства.
      */
-    @Override
-    public Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Double> matrix) {
+    public void run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
         //Количество строк в матрице
-        int rows = matrix.get("rows").intValue();
+        int rows = parameters.get("rows").intValue();
         //Количество колонок в матрице
-        int cols = matrix.get("cols").intValue();
+        int cols = parameters.get("cols").intValue();
+
+        Map<String, Double> matrix = new HashMap<>();
 
         //Фиксируем точку максимальной высоты
         Double maxHeight = getMaxHeight(matrix, rows, cols);
+
+        //Создаётся карта высот
+        //Создаётся карта изменения высот
+        //Создаётся карта классов высот
+        //Выбирается первый выброс сверху из всех классов карты высот
 
         //На этом этапе вычисляется плоскость, проходящая через множество точек
         Map<String, Double> surface = new HashMap<>();
 
         //Затем совершается поиск угла наклона плоскости по осям oX и oY
         //Вычисляем угол по осям oX и oY вычисленной плоскости относительно оси oZ
-        return buildRotation(matrix, maxHeight, rows, cols);
+        buildRotation(matrix, maxHeight, rows, cols);
+
+        //Ну и наконец проводится поворот каждой точки на новый угол
     }
 }

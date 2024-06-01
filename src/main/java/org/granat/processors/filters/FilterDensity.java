@@ -3,7 +3,6 @@ package org.granat.processors.filters;
 import org.granat.scene.objects.Point;
 
 import java.util.Map;
-import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -31,7 +30,7 @@ public class FilterDensity {
 
     /**
      * Проход по каждой точке в срезе, чтобы подсчитать их количество в срезе.
-     * 
+     *
      * @return количество точек в срезе
      */
     private static long accumulateNumberOfPointsInSlice(
@@ -54,22 +53,6 @@ public class FilterDensity {
         return numberOfPointsInSlice.value;
     }
 
-    private static BinaryOperator<Boolean> distanceFunction = (point1, point2) -> {
-        return ;
-    };
-
-    private static void doAccumulation(
-            Supplier<Stream<Point>> pointsStream,
-            double distance) {
-        pointsStream.get().forEach(point1 -> {
-            pointsStream.get().forEach(point2 -> {
-                if (point1 != point2) {
-                    if (p)
-                }
-            });
-        });
-    }
-
     /**
      * Функция, считающая количество точек, попавших во множество срезов в каждом из измерений,
      * и записывающая "вес" каждой точки в её соответствующий параметр.
@@ -90,8 +73,8 @@ public class FilterDensity {
             //Перемещения среза за "такт"
             double delta = parameters.get("delta") / 2;
             //Проходимся по каждому срезу в рамках измерения dimension
-            for (double slice = 0 - bound - epsilon;
-                 slice < bound + epsilon; slice += delta) {
+            for (double slice = 0 - bound + epsilon;
+                 slice < bound - epsilon; slice += delta) {
                 //Ищем количество точек в срезе
                 long numberOfPointsInSlice = accumulateNumberOfPointsInSlice(
                         pointsStreamSupplier.get(), dimension, slice, epsilon);

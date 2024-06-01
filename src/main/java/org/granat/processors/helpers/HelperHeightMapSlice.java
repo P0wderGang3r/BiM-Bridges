@@ -8,32 +8,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Помощник анализа облака точек - фильтрация выбросов на карте высот.
+ * Помощник анализа облака точек - разметка срезов на карте высот.
  */
-public class HelperHeightMapFiltered implements IHelper {
-
-    private void buildDeltaHeightMap(Map<String, Double> matrix, int rows, int cols) {
-
-        //Преобразовываем карту высот в карту изменения высот
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                //Если в матрице есть точка в следующей строке, то ...
-                if (matrix.get((row + 1) + "-" + col) != null) {
-                    //... присваиваем изменение координаты по оси oY текущей точке.
-                    matrix.put("delta-row-" + row + "-" + col,
-                            matrix.get(row  + "-" + col) - matrix.get((row + 1) + "-" + col));
-                    //Иначе считаем, что изменение равно null.
-                }
-                //Если в матрице есть точка в следующем столбце, то ...
-                if (matrix.get(row + "-" + (col + 1)) != null) {
-                    //... присваиваем изменение координаты по оси oX текущей точке.
-                    matrix.put("delta-col-" + row + "-" + col,
-                            matrix.get(row  + "-" + col) - matrix.get(row + "-" + (col + 1)));
-                    //Иначе считаем, что изменение равно null.
-                }
-            }
-        }
-    }
+public class HelperHeightMapSlice implements IHelper {
 
     private void buildCullingMap(Map<String, Double> matrix, AtomicReference<Double> med, int rows, int cols) {
 
@@ -68,20 +45,6 @@ public class HelperHeightMapFiltered implements IHelper {
         }
     }
 
-    private void removeIgnored(Map<String, Double> matrix, int rows, int cols) {
-        //Удаляем все отбракованные точки
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                if (matrix.get("ignored-" + row + "-" + col) != null) {
-                    matrix.remove(row + "-" + col);
-                    matrix.remove("ignored-" + row + "-" + col);
-                    matrix.remove("delta-row-" + row + "-" + col);
-                    matrix.remove("delta-col-" + row + "-" + col);
-                }
-            }
-        }
-    }
-
     /**
      * @param matrix карта высот; rows, cols - размерность карты высот
      * @return карта высот; rows, cols - размерность карты высот
@@ -97,6 +60,8 @@ public class HelperHeightMapFiltered implements IHelper {
 
         if (amount <= 2) return null;
 
+        //TODO: доработки - а не будет ли лучше работать алгоритм, если он будет вычислять САО относительно карты изменений высот.
+
         //Вычисляем центральную тенденцию всех значений матрицы на основе среднего арифметическое
         AtomicReference<Double> tendency = new AtomicReference<>(0.0);
         matrix.forEach((key, value) -> tendency.getAndAccumulate(value, Double::sum));
@@ -107,14 +72,10 @@ public class HelperHeightMapFiltered implements IHelper {
         matrix.forEach((key, value) -> med.set(Math.abs(value - tendency.get())));
         med.set(med.get() / amount);
 
-        //Преобразовываем карту высот в карту изменения высот
-        buildDeltaHeightMap(matrix, rows, cols);
+        //TODO: доработки - разделение по классам, если переход является слишком резким относительно предыдущей точки.
 
         //Помечаем выбросы в карте высот с помощью карты изменения высот
         buildCullingMap(matrix, med, rows, cols);
-
-        //Вычисляем плоскость, проходящую через множество точек
-        removeIgnored(matrix, rows, cols);
 
         return matrix;
     }

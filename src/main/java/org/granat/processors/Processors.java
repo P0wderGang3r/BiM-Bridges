@@ -32,9 +32,9 @@ public enum Processors {
 
         private void initParameters(ControllerScene controllerScene) {
             parameters.put("bound", controllerScene.getMaxBound());
-            parameters.putIfAbsent("epsilon-0", 0.5 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("epsilon-1", 0.5 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("epsilon-2", 0.00125 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("epsilon-0", 0.33 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("epsilon-1", 0.33 * controllerScene.getMaxBound());
+            parameters.putIfAbsent("epsilon-2", 0.01 * controllerScene.getMaxBound());
             parameters.putIfAbsent("delta", 0.05 * controllerScene.getMaxBound());
             parameters.putIfAbsent("threshold", 24 * 1000000.0);
         }
