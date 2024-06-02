@@ -12,6 +12,8 @@ public class Point {
 
     @Getter
     private final static byte densityPosition = 0;
+    @Getter
+    private final static byte superstructurePosition = 1;
 
     //?-------------------------------------------------------------------------------------------------------------DATA
 
@@ -126,5 +128,9 @@ public class Point {
 
     public void setDensityFilterValue(boolean value) {
         setFilterValue(densityPosition, value);
+    }
+
+    public void setSuperstructureParameterValue(int value) {
+        setParameterValue(superstructurePosition, value);
     }
 }

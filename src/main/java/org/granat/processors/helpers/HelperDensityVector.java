@@ -1,12 +1,9 @@
 package org.granat.processors.helpers;
 
-import org.granat.processors.helpers.HelperHeightMap;
-import org.granat.processors.helpers.IHelper;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -38,14 +35,11 @@ o	совершается проход по множеству точек про�
     Все выбросы считаются искомыми поверхностями.
     На выходе - верхние и нижние границы искомых поверхностей.
  */
-public class HelperDensity implements IHelper {
+public class HelperDensityVector {
 
-    @Override
-    public Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
+    public static Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
         if (parameters.get("length") == null ||
-                parameters.get("axis") == null ||
-                parameters.get("axis-col") == null ||
-                parameters.get("axis-row") == null) return null;
+                parameters.get("axis") == null) return null;
 
         //Высота вектора
         int length = parameters.get("length").intValue();
@@ -53,6 +47,7 @@ public class HelperDensity implements IHelper {
         int axis = parameters.get("axis").intValue();
 
         Map<String, Double> vector = new HashMap<>();
+        vector.put("length", (double) length);
 
         pointsStreamSupplier.get().forEach(
                 point -> {

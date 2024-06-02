@@ -36,13 +36,23 @@ public class HelperHeightMapFilter implements IHelper {
         //Количество колонок в матрице
         int cols = matrix.get("cols").intValue();
         //Количество существующих точек в матрице
-        int amount = matrix.size() - 2;
+        int amount = matrix.get("amount").intValue();
 
-        if (amount <= 2) return null;
+        if (amount != 0) {
+            matrix.remove("rows");
+            matrix.remove("cols");
+            matrix.remove("amount");
+        } else {
+            return null;
+        }
 
         //TODO: переработать таким образом, чтобы выбирался только искомый слой
         //Вычисляем плоскость, проходящую через множество точек
         removeIgnored(matrix, rows, cols);
+
+        matrix.put("rows", (double) rows);
+        matrix.put("cols", (double) rows);
+        matrix.put("amount", (double) rows);
 
         return matrix;
     }

@@ -46,12 +46,22 @@ public class HelperHeightMapDelta implements IHelper {
         //Количество колонок в матрице
         int cols = matrix.get("cols").intValue();
         //Количество существующих точек в матрице
-        int amount = matrix.size() - 2;
+        int amount = matrix.get("amount").intValue();
 
-        if (amount <= 2) return null;
+        if (amount != 0) {
+            matrix.remove("rows");
+            matrix.remove("cols");
+            matrix.remove("amount");
+        } else {
+            return null;
+        }
 
         //Преобразовываем карту высот в карту изменения высот
         buildDeltaHeightMap(matrix, rows, cols);
+
+        matrix.put("rows", (double) rows);
+        matrix.put("cols", (double) rows);
+        matrix.put("amount", (double) rows);
 
         return matrix;
     }

@@ -3,6 +3,7 @@ package org.granat.processors.helpers;
 import org.granat.scene.objects.Point;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -33,6 +34,8 @@ public class HelperHeightMap {
         int axisCol = parameters.get("axis-col").intValue();
         //Номер измерения, с которого снимаются значения для матрицы
         int axisVal = parameters.get("axis-val").intValue();
+        //Количество элементов матрицы
+        AtomicInteger amount = new AtomicInteger();
 
         Map<String, Double> matrix = new HashMap<>();
 
@@ -45,11 +48,15 @@ public class HelperHeightMap {
                     int row = (int) ((point.getCoordinates()[axisRow] + 1) * rows);
                     //Ставим в соответствие координате столбец от 0 до cols
                     int col = (int) ((point.getCoordinates()[axisCol] + 1) * cols);
+                    //Увеличиваем количество элементов матрицы, если искомого элемента ещё не существует
+                    if (matrix.get(row + "-" + col) == null) amount.getAndIncrement();
+                    //Создаём новый элемент матрицы
                     matrix.put(row + "-" + col, Math.max(
                             matrix.get(row + "-" + col) == null ? -1 : matrix.get(row + "-" + col),
                             point.getCoordinates()[axisVal]));
                 });
 
+        matrix.put("amount", (double) amount.get());
         return matrix;
     }
 

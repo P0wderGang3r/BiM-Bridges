@@ -2,7 +2,6 @@ package org.granat.processors;
 
 import org.granat.controller.scene.ControllerScene;
 import org.granat.processors.filters.FilterDensity;
-import org.granat.processors.helpers.HelperDensity;
 import org.granat.processors.filters.IFilter;
 import org.granat.scene.objects.Point;
 
