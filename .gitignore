@@ -40,5 +40,6 @@ build/
 ### COMPILE AND RUN ###
 
 /out/
+/lib
 /lib/
 *.e57
