@@ -37,6 +37,8 @@ build/
 ### Mac OS ###
 .DS_Store
 
-/e57/
+### COMPILE AND RUN ###
 
 /out/
+/lib/
+*.e57
