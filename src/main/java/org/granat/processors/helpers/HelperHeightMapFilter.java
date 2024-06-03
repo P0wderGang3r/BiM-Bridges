@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * Помощник анализа облака точек - очищение выбросов с карты высот.
  */
-public class HelperHeightMapFilter implements IHelper {
+public class HelperHeightMapFilter {
 
     private void removeIgnored(Map<String, Double> matrix, int rows, int cols) {
         //Удаляем все отбракованные точки
@@ -29,7 +29,6 @@ public class HelperHeightMapFilter implements IHelper {
      * @param matrix карта высот; rows, cols - размерность карты высот
      * @return карта высот; rows, cols - размерность карты высот
      */
-    @Override
     public Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Double> matrix) {
         //Количество строк в матрице
         int rows = matrix.get("rows").intValue();

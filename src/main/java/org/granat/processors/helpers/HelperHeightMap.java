@@ -14,33 +14,32 @@ public class HelperHeightMap {
 
     /**
      * @param pointsStreamSupplier Множество точек
-     * @param parameters rows, cols - размерность карты высот;
+     * @param data rows, cols - размерность карты высот;
      *                   axis-row, axis-col, axis-val - сопоставление осей X / Y / Z с их позицией и значением в карте высот
      * @return карта высот; rows, cols - размерность карты высот
      */
-    public static Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
-        if (parameters.get("rows") == null || parameters.get("cols") == null ||
-                parameters.get("axis-row") == null ||
-                parameters.get("axis-col") == null ||
-                parameters.get("axis-val") == null) return null;
+    public static Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Map<String, Double>> data) {
+        Map<String, Double> metadata = data.get("metadata");
+
+        if (metadata.get("rows") == null || metadata.get("cols") == null ||
+                metadata.get("axis-row") == null ||
+                metadata.get("axis-col") == null ||
+                metadata.get("axis-val") == null) return null;
 
         //Количество строк в матрице
-        int rows = parameters.get("rows").intValue();
+        int rows = metadata.get("rows").intValue();
         //Количество колонок в матрице
-        int cols = parameters.get("cols").intValue();
+        int cols = metadata.get("cols").intValue();
         //Номер измерения, соответствующего строке матрицы
-        int axisRow = parameters.get("axis-row").intValue();
+        int axisRow = metadata.get("axis-row").intValue();
         //Номер измерения, соответствующего колонке матрицы
-        int axisCol = parameters.get("axis-col").intValue();
+        int axisCol = metadata.get("axis-col").intValue();
         //Номер измерения, с которого снимаются значения для матрицы
-        int axisVal = parameters.get("axis-val").intValue();
+        int axisVal = metadata.get("axis-val").intValue();
         //Количество элементов матрицы
-        AtomicInteger amount = new AtomicInteger();
+        AtomicInteger amount = new AtomicInteger(0);
 
         Map<String, Double> matrix = new HashMap<>();
-
-        matrix.put("rows", (double) rows);
-        matrix.put("cols", (double) cols);
 
         pointsStreamSupplier.get().forEach(
                 point -> {
@@ -56,7 +55,8 @@ public class HelperHeightMap {
                             point.getCoordinates()[axisVal]));
                 });
 
-        matrix.put("amount", (double) amount.get());
+        metadata.put("amount", (double) amount.get());
+
         return matrix;
     }
 

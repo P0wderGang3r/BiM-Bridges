@@ -37,17 +37,18 @@ o	совершается проход по множеству точек про�
  */
 public class HelperDensityVector {
 
-    public static Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
-        if (parameters.get("length") == null ||
-                parameters.get("axis") == null) return null;
+    public static Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Map<String, Double>> data) {
+        Map<String, Double> metadata = data.get("metadata");
+
+        if (metadata.get("length") == null ||
+                metadata.get("axis") == null) return null;
 
         //Высота вектора
-        int length = parameters.get("length").intValue();
+        int length = metadata.get("length").intValue();
         //Номер измерения, с которого снимаются значения для матрицы
-        int axis = parameters.get("axis").intValue();
+        int axis = metadata.get("axis").intValue();
 
         Map<String, Double> vector = new HashMap<>();
-        vector.put("length", (double) length);
 
         pointsStreamSupplier.get().forEach(
                 point -> {

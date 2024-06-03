@@ -2,17 +2,18 @@ package org.granat.processors.helpers;
 
 import org.granat.scene.objects.Point;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
  * Помощник анализа облака точек - вычисление карты высот.
  */
-public class HelperHeightMapDelta implements IHelper {
+public class HelperHeightMapDelta {
 
-    private void buildDeltaHeightMap(Map<String, Double> matrix, int rows, int cols) {
+    private static Map<String, Double> buildHeightMapDelta(Map<String, Double> matrix, int rows, int cols) {
+        Map<String, Double> heightMapDelta = new HashMap<>();
 
         //Преобразовываем карту высот в карту изменения высот
         for (int row = 0; row < rows; row++) {
@@ -20,49 +21,39 @@ public class HelperHeightMapDelta implements IHelper {
                 //Если в матрице есть точка в следующей строке, то ...
                 if (matrix.get((row + 1) + "-" + col) != null) {
                     //... присваиваем изменение координаты по оси oY текущей точке.
-                    matrix.put("delta-row-" + row + "-" + col,
+                    heightMapDelta.put("delta-row-" + row + "-" + col,
                             matrix.get(row  + "-" + col) - matrix.get((row + 1) + "-" + col));
                     //Иначе считаем, что изменение равно null.
                 }
                 //Если в матрице есть точка в следующем столбце, то ...
                 if (matrix.get(row + "-" + (col + 1)) != null) {
                     //... присваиваем изменение координаты по оси oX текущей точке.
-                    matrix.put("delta-col-" + row + "-" + col,
+                    heightMapDelta.put("delta-col-" + row + "-" + col,
                             matrix.get(row  + "-" + col) - matrix.get(row + "-" + (col + 1)));
                     //Иначе считаем, что изменение равно null.
                 }
             }
         }
+
+        return heightMapDelta;
     }
 
     /**
-     * @param matrix карта высот; rows, cols - размерность карты высот
+     * @param data карта высот; rows, cols - размерность карты высот
      * @return карта высот; rows, cols - размерность карты высот
      */
-    @Override
-    public Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Double> matrix) {
-        //Количество строк в матрице
-        int rows = matrix.get("rows").intValue();
-        //Количество колонок в матрице
-        int cols = matrix.get("cols").intValue();
-        //Количество существующих точек в матрице
-        int amount = matrix.get("amount").intValue();
+    public static Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Map<String, Double>> data) {
+        Map<String, Double> metadata = data.get("metadata");
+        Map<String, Double> heightMap = data.get("height-map");
 
-        if (amount != 0) {
-            matrix.remove("rows");
-            matrix.remove("cols");
-            matrix.remove("amount");
-        } else {
-            return null;
-        }
+        //Количество строк в матрице
+        int rows = metadata.get("rows").intValue();
+        //Количество колонок в матрице
+        int cols = metadata.get("cols").intValue();
 
         //Преобразовываем карту высот в карту изменения высот
-        buildDeltaHeightMap(matrix, rows, cols);
+        Map<String, Double> heightMapDelta = buildHeightMapDelta(heightMap, rows, cols);
 
-        matrix.put("rows", (double) rows);
-        matrix.put("cols", (double) rows);
-        matrix.put("amount", (double) rows);
-
-        return matrix;
+        return heightMapDelta;
     }
 }

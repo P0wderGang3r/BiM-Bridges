@@ -17,15 +17,12 @@ import java.util.stream.Stream;
  */
 public class HelperDensityVectorSlice {
 
-    public static Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Double> vector) {
-        //Высота вектора
-        int length = vector.get("length").intValue();
+    public static Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Map<String, Double>> data) {
+        Map<String, Double> metadata = data.get("metadata");
+        Map<String, Double> densityVector = data.get("density-vector");
 
-        if (length > 0) {
-            vector.remove("length");
-        } else {
-            return null;
-        }
+        //Высота вектора
+        int length = metadata.get("length").intValue();
 
         Map<String, Double> classes = new HashMap<>();
         int currentClass = 1;
@@ -34,8 +31,8 @@ public class HelperDensityVectorSlice {
         //Вычисляем среднее значение минимального и максимального элементов вектора
         AtomicReference<Double> max = new AtomicReference<>(0.0);
         AtomicReference<Double> min = new AtomicReference<>();
-        vector.values().stream().findFirst().ifPresent(min::set);
-        vector.forEach((key, value) -> {
+        densityVector.values().stream().findFirst().ifPresent(min::set);
+        densityVector.forEach((key, value) -> {
             max.set(Math.max(max.get(), value));
             min.set(Math.min(max.get(), value));
         });
@@ -45,9 +42,9 @@ public class HelperDensityVectorSlice {
         //Размечаем классы. Для этого проходимся по вектору.
         for (int index = 0; index < length; index++) {
             //Если текущее значение существует ...
-            if (vector.get("" + index) != null) {
+            if (densityVector.get("" + index) != null) {
                 //... и если текущее значение больше среднего ...
-                if (vector.get("" + index) > med.get()) {
+                if (densityVector.get("" + index) > med.get()) {
                     if (!isInClass) isInClass = true;
                     //... то записываем текущее в текущий класс.
                     classes.put("" + index, (double) currentClass);
@@ -60,8 +57,6 @@ public class HelperDensityVectorSlice {
             }
         }
 
-        //Восстанавливаем значение предполагаемой длины вектора.
-        vector.put("length", (double) length);
         return classes;
     }
 }

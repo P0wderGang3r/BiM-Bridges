@@ -9,8 +9,7 @@ import java.util.stream.Stream;
 /**
  * Алгоритм вычисления плоскости, проходящей через предоставленное множество точек
  */
-public class HelperSurface implements IHelper {
-    @Override
+public class HelperSurface {
     public Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Double> matrix) {
         return null;
     }

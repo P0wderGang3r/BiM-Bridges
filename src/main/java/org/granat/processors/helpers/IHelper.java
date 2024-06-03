@@ -7,5 +7,5 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface IHelper {
-    Map<String, Double> run(Supplier<Stream<Point>> pointsStreams, Map<String, Double> parameters);
+    Map<String, Double> run(Supplier<Stream<Point>> pointsStreams, Map<String, Map<String, Double>> data);
 }

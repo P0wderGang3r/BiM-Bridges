@@ -1,9 +1,11 @@
 package org.granat.processors.filters;
 
 import org.granat.processors.helpers.HelperDensityVector;
+import org.granat.processors.helpers.HelperDensityVectorSlice;
 import org.granat.processors.helpers.IHelper;
 import org.granat.scene.objects.Point;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,7 +17,7 @@ import java.util.stream.Stream;
  */
 public class FilterSuperstructures {
     IHelper helperDensityVector = HelperDensityVector::run;
-    IHelper helperDensityVectorSlice = HelperDensityVector::run;
+    IHelper helperDensityVectorSlice = HelperDensityVectorSlice::run;
 
     /**
      *
@@ -26,11 +28,16 @@ public class FilterSuperstructures {
         //Высота вектора
         int length = parameters.get("length").intValue();
 
+        Map<String, Map<String, Double>> data = new HashMap<>();
+        data.put("metadata", parameters);
+
         //Создаётся вектор плотностей по оси oZ
-        Map<String, Double> verticalDensity = helperDensityVector.run(pointsStreams, parameters);
+        Map<String, Double> densityVector = helperDensityVector.run(pointsStreams, data);
+        data.put("density-vector", densityVector);
 
         //Вычисляется множество плоскостей, в которых наблюдаются выбросы
-        Map<String, Double> verticalSlices = helperDensityVectorSlice.run(null, verticalDensity);
+        Map<String, Double> verticalSlices = helperDensityVectorSlice.run(null, data);
+        data.remove("density-vector"); densityVector = null;
 
         //Размечаются все точки по принадлежности выбросам в векторе плотностей
         AtomicReference<Double> currentSlice = new AtomicReference<>(null);
