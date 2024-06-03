@@ -19,7 +19,7 @@ public class HelperHeightMapClasses {
             Map<String, Double> classesMap,
             Map<String, Double> heightMap,
             double currentClass, int row, int col) {
-        if (heightMap.get("border-" + row + "-" + col) != null) return new ArrayList<>();
+        if (heightMap.get(row + "-" + col) != null) return new ArrayList<>();
 
         List<String> markedNeighbors = new ArrayList<>();
 
@@ -27,8 +27,8 @@ public class HelperHeightMapClasses {
             for (int iterCol = col - 1; iterCol < col + 1; iterCol++) {
                 if (iterRow == row && iterCol == col) continue;
                 if (heightMap.get(iterRow + "-" + iterCol) != null &&
-                        classesMap.get("class-" + iterRow + "-" + iterCol) == null) {
-                    classesMap.put("class-" + iterRow + "-" + iterCol, currentClass);
+                        classesMap.get(iterRow + "-" + iterCol) == null) {
+                    classesMap.put(iterRow + "-" + iterCol, currentClass);
                     markedNeighbors.add(iterRow + "-" + iterCol);
                 }
             }
@@ -42,11 +42,11 @@ public class HelperHeightMapClasses {
             Map<String, Double> heightMap,
             Map<String, Double> borderMap,
             double currentClass, int row, int col) {
-        if (classesMap.get("class-" + row + "-" + col) != null) return false;
+        if (classesMap.get(row + "-" + col) != null) return false;
         if (heightMap.get(row + "-" + col) == null) return false;
-        if (borderMap.get("border-" + row + "-" + col) != null) return false;
+        if (borderMap.get(row + "-" + col) != null) return false;
 
-        classesMap.put("class-" + row + "-" + col, currentClass);
+        classesMap.put(row + "-" + col, currentClass);
 
         Stack<String> classesFilled = new Stack<>();
         classesFilled.add(row + "-" + col);

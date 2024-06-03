@@ -21,14 +21,14 @@ public class HelperHeightMapDelta {
                 //Если в матрице есть точка в следующей строке, то ...
                 if (matrix.get((row + 1) + "-" + col) != null) {
                     //... присваиваем изменение координаты по оси oY текущей точке.
-                    heightMapDelta.put("delta-row-" + row + "-" + col,
+                    heightMapDelta.put(row + "-" + col,
                             matrix.get(row  + "-" + col) - matrix.get((row + 1) + "-" + col));
                     //Иначе считаем, что изменение равно null.
                 }
                 //Если в матрице есть точка в следующем столбце, то ...
                 if (matrix.get(row + "-" + (col + 1)) != null) {
                     //... присваиваем изменение координаты по оси oX текущей точке.
-                    heightMapDelta.put("delta-col-" + row + "-" + col,
+                    heightMapDelta.put(row + "-" + col,
                             matrix.get(row  + "-" + col) - matrix.get(row + "-" + (col + 1)));
                     //Иначе считаем, что изменение равно null.
                 }

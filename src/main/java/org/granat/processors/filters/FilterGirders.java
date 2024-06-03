@@ -19,7 +19,8 @@ public class FilterGirders {
     IHelper helperHeightMap = HelperHeightMap::run;
     IHelper helperHeightMapDelta = HelperHeightMapDelta::run;
     IHelper helperHeightMapBorders = HelperHeightMapBorders::run;
-    IHelper helperHeightMapSlice = HelperHeightMapClasses::run;
+    IHelper helperHeightMapClasses = HelperHeightMapClasses::run;
+    IHelper helperHeightMapClassesMetadata = HelperHeightMapClassesMetadata::run;
 
     /**
      *
@@ -48,14 +49,15 @@ public class FilterGirders {
         data.remove("height-map-delta"); heightMapDelta = null;
 
         //Создаётся карта классов по карте высот
-        Map<String, Double> heightMapClasses = helperHeightMapSlice.run(null, data);
+        Map<String, Double> heightMapClasses = helperHeightMapClasses.run(null, data);
         data.put("height-map-classes", heightMapClasses);
         data.remove("height-map-borders"); heightMapBorders = null;
 
+        //Составляется карта метаданных классов (количество, минимумы, максимумы)
+        Map<String, Double> heightMapClassesMetadata = helperHeightMapClassesMetadata.run(null, data);
+        data.put("height-map-classes-metadata", heightMapClassesMetadata);
+
         //Выбирается множество нижних классов на приблизительно одинаковой высоте
-
-        //Составить карту метаданных классов (количество, минимумы, максимумы)
-
         //Выбрать нижние поверхности балок (количество -> max != max)
 
         //Разметить точки в соответствии с извлечённой информацией

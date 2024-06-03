@@ -23,21 +23,21 @@ public class HelperHeightMapBorders {
             for (int col = 0; col < cols; col++) {
 
                 //Если в матрице есть изменение относительно точки в следующей строке ...
-                if (heightMapDelta.get("delta-row-" + row + "-" + col) != null &&
+                if (heightMapDelta.get(row + "-" + col) != null &&
                         //... и если изменение больше, чем абсолютное отклонение, ...
-                        Math.abs(heightMapDelta.get("delta-row-" + row + "-" + col)) >= med.get()) {
+                        Math.abs(heightMapDelta.get(row + "-" + col)) >= med.get()) {
                     ///... то присваиваем текущему элементу матрицы и следующему значение границы.
-                    bordersMap.put("border-" + row + "-" + col, 1.0);
-                    bordersMap.put("border-" + (row + 1) + "-" + col, 1.0);
+                    bordersMap.put(row + "-" + col, 1.0);
+                    bordersMap.put((row + 1) + "-" + col, 1.0);
                 }
 
                 //Если в матрице есть изменение относительно точки в следующем столбце ...
-                if (heightMapDelta.get("delta-col-" + row + "-" + col) != null &&
+                if (heightMapDelta.get(row + "-" + col) != null &&
                         //... и если изменение больше, чем абсолютное отклонение, ...
-                        Math.abs(heightMapDelta.get("delta-col-" + row + "-" + col)) >= med.get()) {
+                        Math.abs(heightMapDelta.get(row + "-" + col)) >= med.get()) {
                     ///... то присваиваем текущему элементу матрицы и следующему значение границы.
-                    bordersMap.put("border-" + row + "-" + col, 1.0);
-                    bordersMap.put("border-" + row + "-" + (col + 1), 1.0);
+                    bordersMap.put(row + "-" + col, 1.0);
+                    bordersMap.put(row + "-" + (col + 1), 1.0);
                 }
             }
         }
