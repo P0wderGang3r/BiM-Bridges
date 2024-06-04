@@ -1,11 +1,12 @@
 package org.granat.processors.filters;
 
 import org.granat.processors.helpers.*;
+import org.granat.processors.helpers.height_map.algo.HelperHeightGroupsMetadata;
 import org.granat.processors.helpers.height_map.base.HelperHeightMap;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapBorders;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapClasses;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapDelta;
-import org.granat.processors.helpers.height_map.algo.HelperHeightClassesFiltered;
+import org.granat.processors.helpers.height_map.algo.HelperHeightGroupsFiltered;
 import org.granat.processors.helpers.height_map.algo.HelperHeightClassesMetadata;
 import org.granat.processors.helpers.height_map.algo.HelperHeightGroups;
 import org.granat.scene.objects.Point;
@@ -27,9 +28,41 @@ public class FilterGirders {
     IHelper helperHeightMapDelta = HelperHeightMapDelta::run;
     IHelper helperHeightMapBorders = HelperHeightMapBorders::run;
     IHelper helperHeightMapClasses = HelperHeightMapClasses::run;
+
     IHelper helperHeightMapClassesMetadata = HelperHeightClassesMetadata::run;
-    IHelper helperHeightMapClassesMetadataGroups = HelperHeightGroups::run;
-    IHelper helperHeightMapClassesFiltered = HelperHeightClassesFiltered::run;
+    IHelper helperHeightMapGroups = HelperHeightGroups::run;
+    IHelper helperHeightMapGroupsMetadata = HelperHeightGroupsMetadata::run;
+    IHelper helperHeightMapGroupsFiltered = HelperHeightGroupsFiltered::run;
+
+    private void filter(
+            Supplier<Stream<Point>> pointsStreams,
+            Map<String, Double> parameters,
+            Map<String, Double> heightMap,
+            Map<String, Double> heightMapClasses,
+            Map<String, Double> heightMapGroupsFiltered
+    ) {
+        //Количество строк в матрице
+        int rows = parameters.get("rows").intValue();
+        //Количество колонок в матрице
+        int cols = parameters.get("cols").intValue();
+        //Номер измерения, соответствующего строке матрицы
+        int axisRow = parameters.get("axis-row").intValue();
+        //Номер измерения, соответствующего колонке матрицы
+        int axisCol = parameters.get("axis-col").intValue();
+        //Номер измерения, с которого снимаются значения для матрицы
+        int axisVal = parameters.get("axis-val").intValue();
+
+        pointsStreams.get().forEach(point -> {
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    if (heightMap.get(row + "-" + col) == null) continue;
+                    if (heightMapGroupsFiltered.get(
+                            "class-" + heightMapClasses.get(row + "-" + col).intValue()) == null) continue;
+                    //TODO: если точка находится на совпадающих координатах, то присваиваем класс
+                }
+            }
+        });
+    }
 
     /**
      *
@@ -67,16 +100,20 @@ public class FilterGirders {
         data.put("height-map-classes-metadata", heightMapClassesMetadata);
 
         //Разбивается множество классов на группы по сходным высотам
-        Map<String, Double> heightMapClassesMetadataGroups = helperHeightMapClassesMetadataGroups.run(null, data);
-        data.put("height-map-classes-metadata-groups", heightMapClassesMetadataGroups);
+        Map<String, Double> heightMapGroups = helperHeightMapGroups.run(null, data);
+        data.put("height-map-groups", heightMapGroups);
+
+        //Составляется карта метаданных групп классов (количество, минимумы, максимумы)
+        Map<String, Double> heightMapGroupsMetadata = helperHeightMapGroupsMetadata.run(null, data);
+        data.put("height-map-groups-metadata", heightMapGroupsMetadata);
 
         //Выбирается множество нижних классов на приблизительно одинаковой высоте
         //Выбрать нижние поверхности балок (количество -> max != max)
-        Map<String, Double> heightMapClassesFiltered = helperHeightMapClassesFiltered.run(null, data);
-        data.put("height-map-classes-filtered", heightMapClassesFiltered);
-        data.remove("height-map-classes-metadata-groups"); heightMapClassesMetadataGroups = null; //Высвобождение памяти
+        Map<String, Double> heightMapGroupsFiltered = helperHeightMapGroupsFiltered.run(null, data);
+        data.remove("height-map-groups"); heightMapGroups = null; //Высвобождение памяти
+        data.remove("height-map-groups-metadata"); heightMapGroupsMetadata = null; //Высвобождение памяти
 
         //Разметить точки в соответствии с извлечённой информацией
-
+        filter(pointsStreams, parameters, heightMap, heightMapClasses, heightMapGroupsFiltered);
     }
 }

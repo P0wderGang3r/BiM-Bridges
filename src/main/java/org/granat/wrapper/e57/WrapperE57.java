@@ -3,6 +3,7 @@ package org.granat.wrapper.e57;
 import com.sun.jna.Native;
 import lombok.Getter;
 import lombok.Setter;
+import org.granat.Globals;
 import org.granat.wrapper.IWrapper;
 
 public class WrapperE57 implements IWrapper {
@@ -42,8 +43,8 @@ public class WrapperE57 implements IWrapper {
     public double[][] getData() {
         long pointsNum = getPointsNum();
         PointsData pointsData = NativeE57.instance.getPointsData(filePath);
-        double[][] data = new double[(int) pointsNum][4];
-        for (int index = 0; index < (int) pointsNum; index++) {
+        double[][] data = new double[(int) pointsNum / Globals.wrapperInputSkip][4];
+        for (int index = 0; index < (int) pointsNum; index += Globals.wrapperInputSkip) {
             data[index][0] = pointsData.coordsX.getDouble((long) index * Native.getNativeSize(Double.TYPE));
             data[index][1] = pointsData.coordsY.getDouble((long) index * Native.getNativeSize(Double.TYPE));
             data[index][2] = pointsData.coordsZ.getDouble((long) index * Native.getNativeSize(Double.TYPE));

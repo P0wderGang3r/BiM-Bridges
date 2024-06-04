@@ -24,17 +24,27 @@ public class HelperHeightGroupsMetadata {
             heightMapClassesMetadata.forEach((classesKey, classesValue) -> {
                 //Если найдено минимальное значение класса, то ...
                 if (classesKey.equals("class-min-" + groupsKey.split("-")[1])) {
-                    groupsMetadata.putIfAbsent("group-min-" + groupsValue.intValue(), classesValue);
-                    //... записываем минимальное значение между значением для группы и этим классом
-                    groupsMetadata.put("group-min-" + groupsValue.intValue(),
-                            Math.min(groupsMetadata.get("group-min-" + groupsValue.intValue()), classesValue));
-                }
+                    //... добавляем элемент группы и ...
+                    String currentGroup = "group-" + groupsValue.intValue();
+                    groupsMetadata.putIfAbsent(currentGroup, 0.0);
+                    groupsMetadata.put(currentGroup, groupsMetadata.get(currentGroup) + 1.0);
+
+                    //... записываем минимальное значение между значением для группы и этим классом.
+                    String currentValue = "group-min-" + groupsValue.intValue();
+                    groupsMetadata.putIfAbsent(currentValue, classesValue);
+                    groupsMetadata.put(currentValue, Math.min(groupsMetadata.get(currentValue), classesValue));
+                } else
+                //Если найдено максимальное значение класса, то ...
                 if (classesKey.equals("class-max-" + groupsKey.split("-")[1])) {
-                    //Если найдено минимальное значение класса, то ...
-                    groupsMetadata.putIfAbsent("group-max-" + groupsValue.intValue(), classesValue);
-                    //... записываем максимальное значение между значением для группы и этим классом
-                    groupsMetadata.put("group-max-" + groupsValue.intValue(),
-                            Math.max(groupsMetadata.get("group-max-" + groupsValue.intValue()), classesValue));
+                    //... добавляем элемент группы и ...
+                    String currentGroup = "group-" + groupsValue.intValue();
+                    groupsMetadata.putIfAbsent(currentGroup, 0.0);
+                    groupsMetadata.put(currentGroup, groupsMetadata.get(currentGroup) + 1.0);
+
+                    //... записываем максимальное значение между значением для группы и этим классом.
+                    String currentValue = "group-max-" + groupsValue.intValue();
+                    groupsMetadata.putIfAbsent(currentValue, classesValue);
+                    groupsMetadata.put(currentValue, Math.max(groupsMetadata.get(currentValue), classesValue));
                 }
             });
             //... и записываем максимальную группу в количество существующих групп
@@ -43,6 +53,12 @@ public class HelperHeightGroupsMetadata {
 
         //Увеличиваем значение количества групп на 1 относительно максимального номера группы
         groupsMetadata.put("groups", groupsMetadata.get("groups") + 1.0);
+
+        for (int index = 0; index < groupsMetadata.get("groups"); index++) {
+            groupsMetadata.put("group-med-" + index,
+                    (groupsMetadata.get("group-min-" + index) + groupsMetadata.get("group-max-" + index)) / 2);
+        }
+
         return groupsMetadata;
     }
 
@@ -51,15 +67,9 @@ public class HelperHeightGroupsMetadata {
      * @return карта высот; rows, cols - размерность карты высот
      */
     public static Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Map<String, Double>> data) {
-        
-        Map<String, Double> metadata = data.get("metadata");
+
         Map<String, Double> heightMapClassesMetadata = data.get("height-map-classes-metadata");
         Map<String, Double> heightMapGroups = data.get("height-map-groups");
-
-        //Количество строк в матрице
-        int rows = metadata.get("rows").intValue();
-        //Количество колонок в матрице
-        int cols = metadata.get("cols").intValue();
 
         //Заполняем классы в обозначенных границах классов в карте высот
         Map<String, Double> heightMapGroupsMetadata = buildClassesMetadataMap(heightMapClassesMetadata, heightMapGroups);
