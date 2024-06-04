@@ -1,4 +1,4 @@
-package org.granat.processors.helpers;
+package org.granat.processors.helpers.height_map.base;
 
 import org.granat.scene.objects.Point;
 

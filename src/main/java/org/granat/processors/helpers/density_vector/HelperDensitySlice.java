@@ -1,10 +1,9 @@
-package org.granat.processors.helpers;
+package org.granat.processors.helpers.density_vector;
 
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -15,7 +14,7 @@ import java.util.stream.Stream;
  * Все выбросы считаются искомыми поверхностями.
  * На выходе - верхние и нижние границы искомых поверхностей.
  */
-public class HelperDensityVectorSlice {
+public class HelperDensitySlice {
 
     public static Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Map<String, Double>> data) {
         Map<String, Double> metadata = data.get("metadata");

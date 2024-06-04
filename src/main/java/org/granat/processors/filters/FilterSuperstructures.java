@@ -1,13 +1,12 @@
 package org.granat.processors.filters;
 
-import org.granat.processors.helpers.HelperDensityVector;
-import org.granat.processors.helpers.HelperDensityVectorSlice;
+import org.granat.processors.helpers.density_vector.HelperDensity;
+import org.granat.processors.helpers.density_vector.HelperDensitySlice;
 import org.granat.processors.helpers.IHelper;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -16,8 +15,8 @@ import java.util.stream.Stream;
  * Класс, отвечающий за выбор одного из срезов, соответствующих горизонтальным опорным строениям мостовых сооружений.
  */
 public class FilterSuperstructures {
-    IHelper helperDensityVector = HelperDensityVector::run;
-    IHelper helperDensityVectorSlice = HelperDensityVectorSlice::run;
+    IHelper helperDensityVector = HelperDensity::run;
+    IHelper helperDensityVectorSlice = HelperDensitySlice::run;
 
     /**
      *

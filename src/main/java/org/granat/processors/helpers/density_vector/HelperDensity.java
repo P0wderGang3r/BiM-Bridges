@@ -1,4 +1,4 @@
-package org.granat.processors.helpers;
+package org.granat.processors.helpers.density_vector;
 
 import org.granat.scene.objects.Point;
 
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * Все выбросы считаются искомыми поверхностями.
  * На выходе - верхние и нижние границы искомых поверхностей.
  */
-public class HelperDensityVector {
+public class HelperDensity {
 
     public static Map<String, Double> run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Map<String, Double>> data) {
         Map<String, Double> metadata = data.get("metadata");

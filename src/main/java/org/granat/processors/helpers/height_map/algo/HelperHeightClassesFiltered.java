@@ -1,15 +1,16 @@
-package org.granat.processors.helpers;
+package org.granat.processors.helpers.height_map.algo;
 
 import org.granat.scene.objects.Point;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
  * Помощник анализа облака точек - разметка срезов на карте высот.
  */
-public class HelperHeightMapClassesMetadata {
+public class HelperHeightClassesFiltered {
 
     private static Map<String, Double> buildClassesMetadataMap(
             Map<String, Double> heightMap,

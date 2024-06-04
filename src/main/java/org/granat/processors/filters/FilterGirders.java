@@ -1,6 +1,13 @@
 package org.granat.processors.filters;
 
 import org.granat.processors.helpers.*;
+import org.granat.processors.helpers.height_map.base.HelperHeightMap;
+import org.granat.processors.helpers.height_map.base.HelperHeightMapBorders;
+import org.granat.processors.helpers.height_map.base.HelperHeightMapClasses;
+import org.granat.processors.helpers.height_map.base.HelperHeightMapDelta;
+import org.granat.processors.helpers.height_map.algo.HelperHeightClassesFiltered;
+import org.granat.processors.helpers.height_map.algo.HelperHeightClassesMetadata;
+import org.granat.processors.helpers.height_map.algo.HelperHeightGroups;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
@@ -20,7 +27,9 @@ public class FilterGirders {
     IHelper helperHeightMapDelta = HelperHeightMapDelta::run;
     IHelper helperHeightMapBorders = HelperHeightMapBorders::run;
     IHelper helperHeightMapClasses = HelperHeightMapClasses::run;
-    IHelper helperHeightMapClassesMetadata = HelperHeightMapClassesMetadata::run;
+    IHelper helperHeightMapClassesMetadata = HelperHeightClassesMetadata::run;
+    IHelper helperHeightMapClassesMetadataGroups = HelperHeightGroups::run;
+    IHelper helperHeightMapClassesFiltered = HelperHeightClassesFiltered::run;
 
     /**
      *
@@ -46,19 +55,26 @@ public class FilterGirders {
         //Создаётся карта классов по карте высот
         Map<String, Double> heightMapBorders = helperHeightMapBorders.run(null, data);
         data.put("height-map-borders", heightMapBorders);
-        data.remove("height-map-delta"); heightMapDelta = null;
+        data.remove("height-map-delta"); heightMapDelta = null; //Высвобождение памяти
 
         //Создаётся карта классов по карте высот
         Map<String, Double> heightMapClasses = helperHeightMapClasses.run(null, data);
         data.put("height-map-classes", heightMapClasses);
-        data.remove("height-map-borders"); heightMapBorders = null;
+        data.remove("height-map-borders"); heightMapBorders = null; //Высвобождение памяти
 
         //Составляется карта метаданных классов (количество, минимумы, максимумы)
         Map<String, Double> heightMapClassesMetadata = helperHeightMapClassesMetadata.run(null, data);
         data.put("height-map-classes-metadata", heightMapClassesMetadata);
 
+        //Разбивается множество классов на группы по сходным высотам
+        Map<String, Double> heightMapClassesMetadataGroups = helperHeightMapClassesMetadataGroups.run(null, data);
+        data.put("height-map-classes-metadata-groups", heightMapClassesMetadataGroups);
+
         //Выбирается множество нижних классов на приблизительно одинаковой высоте
         //Выбрать нижние поверхности балок (количество -> max != max)
+        Map<String, Double> heightMapClassesFiltered = helperHeightMapClassesFiltered.run(null, data);
+        data.put("height-map-classes-filtered", heightMapClassesFiltered);
+        data.remove("height-map-classes-metadata-groups"); heightMapClassesMetadataGroups = null; //Высвобождение памяти
 
         //Разметить точки в соответствии с извлечённой информацией
 
