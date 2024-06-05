@@ -13,9 +13,9 @@ public class Point {
     @Getter
     private final static byte densityPosition = 0;
     @Getter
-    private final static byte superstructurePosition = 1;
+    private final static byte superstructuresPosition = 1;
     @Getter
-    private final static byte girderPosition = 2;
+    private final static byte girdersPosition = 2;
 
     //?-------------------------------------------------------------------------------------------------------------DATA
 
@@ -52,9 +52,27 @@ public class Point {
         return this.color;
     }
 
+    public boolean getDensityFilterValue() {
+        if (this.filters != null && this.filters.length > densityPosition)
+            return filters[densityPosition];
+        return false;
+    }
+
     public long getDensityParameterValue() {
         if (this.parameters != null && this.parameters.length > densityPosition)
             return parameters[densityPosition];
+        return 1;
+    }
+
+    public long getSuperstructuresParameterValue() {
+        if (this.parameters != null && this.parameters.length > densityPosition)
+            return parameters[superstructuresPosition];
+        return 1;
+    }
+
+    public long getGirdersParameterValue() {
+        if (this.parameters != null && this.parameters.length > densityPosition)
+            return parameters[girdersPosition];
         return 1;
     }
 
@@ -62,6 +80,12 @@ public class Point {
         if (position > -1 && this.filters != null && this.filters.length > position)
             return filters[position];
         return true;
+    }
+
+    public double getParameterValue(int position) {
+        if (position > -1 && this.parameters != null && this.parameters.length > position)
+            return parameters[position];
+        return -1.0;
     }
 
     //?----------------------------------------------------------------------------------------------------------SETTERS
@@ -133,10 +157,10 @@ public class Point {
     }
 
     public void setSuperstructureParameterValue(int value) {
-        setParameterValue(superstructurePosition, value);
+        setParameterValue(superstructuresPosition, value);
     }
 
     public void setLowerGirderClassValue(int value) {
-        setParameterValue(girderPosition, value);
+        setParameterValue(girdersPosition, value);
     }
 }

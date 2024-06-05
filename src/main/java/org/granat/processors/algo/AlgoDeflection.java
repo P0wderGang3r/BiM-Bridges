@@ -30,14 +30,14 @@ import java.util.stream.Stream;
  */
 public class AlgoDeflection {
 
-    private void calculateDeflection(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
+    private static void calculateDeflection(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
 
     }
 
-    IHelper helperHeightMap = HelperHeightMap::run;
-    IHelper helperDeflectionPoints = HelperDeflectionPoints::run;
+    static IHelper helperHeightMap = HelperHeightMap::run;
+    static IHelper helperDeflectionPoints = HelperDeflectionPoints::run;
 
-    public void run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
+    public static void run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
 
         Map<String, Map<String, Double>> data = new HashMap<>();
         data.put("metadata", parameters);

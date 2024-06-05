@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  */
 public class AlgoTilt {
 
-    private Double getMaxHeight(Map<String, Double> matrix, int rows, int cols) {
+    private static Double getMaxHeight(Map<String, Double> matrix, int rows, int cols) {
         Double maxHeight = -1.0;
 
         //Удаляем все отбракованные точки
@@ -44,7 +44,7 @@ public class AlgoTilt {
         return maxHeight;
     }
 
-    private Map<String, Double> buildRotation(Map<String, Double> matrix, Double maxHeight, int rows, int cols) {
+    private static Map<String, Double> buildRotation(Map<String, Double> matrix, Double maxHeight, int rows, int cols) {
         Map<String, Double> degrees = new HashMap<>(4);
 
         for (int row = 0; row < rows; row++) {
@@ -65,7 +65,7 @@ public class AlgoTilt {
      * @param pointsStreamSupplier потоки точек пространства.
      * @param parameters "epsilon" - разброс точек от центра среза; "delta" - изменение координаты среза; "bound" - граничное значение пространства.
      */
-    public void run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
+    public static void run(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
         //Количество строк в матрице
         int rows = parameters.get("rows").intValue();
         //Количество колонок в матрице

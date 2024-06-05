@@ -24,7 +24,7 @@ public class HelperDensitySlice {
         int length = metadata.get("length").intValue();
 
         Map<String, Double> classes = new HashMap<>();
-        int currentClass = 1;
+        int currentClass = 0;
         boolean isInClass = false;
 
         //Вычисляем среднее значение минимального и максимального элементов вектора

@@ -1,6 +1,7 @@
 package org.granat.processors;
 
 import org.granat.controller.scene.ControllerScene;
+import org.granat.processors.algo.AlgoDeflection;
 import org.granat.processors.filters.FilterDensity;
 import org.granat.processors.filters.FilterGirders;
 import org.granat.processors.filters.FilterSuperstructures;
@@ -71,7 +72,8 @@ public enum Processors {
         final IFilter processor = FilterSuperstructures::run;
 
         private void initParameters(ControllerScene controllerScene) {
-            //TODO: ВАЖНО!!
+            parameters.put("length", 100.0);
+            parameters.putIfAbsent("axis", 2.0);
         }
 
         public void setParameters(Map<String, Double> parameters) { }
@@ -82,7 +84,8 @@ public enum Processors {
         @Override
         public void process(ControllerScene controllerScene) {
             initParameters(controllerScene);
-            Supplier<Stream<Point>> pointsStreams = controllerScene::getPointsStream;
+            Supplier<Stream<Point>> pointsStreams = () ->
+                    controllerScene.getPointsStream().filter(Point::getDensityFilterValue);
             processor.run(pointsStreams, parameters);
         }
     },
@@ -92,7 +95,13 @@ public enum Processors {
         final IFilter processor = FilterGirders::run;
 
         private void initParameters(ControllerScene controllerScene) {
-            //TODO: ВАЖНО!!
+            parameters.put("rows", 100.0);
+            parameters.put("cols", 100.0);
+            parameters.putIfAbsent("axis-row", 0.0);
+            parameters.putIfAbsent("axis-col", 1.0);
+            parameters.putIfAbsent("axis-val", 2.0);
+            parameters.putIfAbsent("sequential-number", 1.0);
+            parameters.putIfAbsent("direction", -1.0);
         }
 
         public void setParameters(Map<String, Double> parameters) { }
@@ -103,16 +112,16 @@ public enum Processors {
         @Override
         public void process(ControllerScene controllerScene) {
             initParameters(controllerScene);
-            Supplier<Stream<Point>> pointsStreams = controllerScene::getPointsStream;
+            Supplier<Stream<Point>> pointsStreams = () ->
+                    controllerScene.getPointsStream().filter(point ->
+                            point.getParameterValue(Point.getSuperstructuresPosition()) == 0);
             processor.run(pointsStreams, parameters);
         }
     },
     DEFLECTION {
         final Map<String, Double> parameters = new HashMap<>();
 
-        final IFilter preprocessor = FilterDensity::preprocess;
-
-        final IFilter processor = FilterDensity::filter;
+        final IFilter processor = AlgoDeflection::run;
 
         private void initParameters(ControllerScene controllerScene) {
             //TODO: ВАЖНО!!

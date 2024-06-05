@@ -119,14 +119,44 @@ public record ControllerScene(Scene scene) {
     //-----------------------------------------------------------------------------------------ПРОЛЁТЫ МОСТОВЫХ СТРОЕНИЙ
 
     public void setColorGradationSuperstructures() {
-        //TODO: ВАЖНО!!
+        this.scene.setColorGradationSuperstructures();
+        double[] parameters = new double[] {this.scene.getSceneSuperstructuresParameterValue()};
+        this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream)
+                .forEach(point -> ColorGradation.SUPERSTRUCTURES.setColor(point, parameters));
     }
+
+    public void resetColorGradationSuperstructures() {
+        if (this.scene.getCurrentColorGradation() != Scene.getColorGradationSuperstructures()) return;
+        double[] parameters = new double[] {this.scene.getSceneSuperstructuresParameterValue()};
+        this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream)
+                .forEach(point -> ColorGradation.SUPERSTRUCTURES.setColor(point, parameters));
+    }
+
 
     //----------------------------------------------------------------------------------БАЛКИ ПРОЛЁТОВ МОСТОВЫХ СТРОЕНИЙ
 
     public void setColorGradationGirders() {
-        //TODO: ВАЖНО!!
+        this.scene.setColorGradationGirders();
+        double[] parameters = new double[] {this.scene.getSceneGirdersParameterValue()};
+        this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream)
+                .forEach(point -> ColorGradation.GIRDERS.setColor(point, parameters));
     }
+
+    public void resetColorGradationGirders() {
+        if (this.scene.getCurrentColorGradation() != Scene.getColorGradationGirders()) return;
+        double[] parameters = new double[] {this.scene.getSceneGirdersParameterValue()};
+        this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream)
+                .forEach(point -> ColorGradation.GIRDERS.setColor(point, parameters));
+    }
+
 
     //---------------------------------------------------------------------------------------------------ПАРАМЕТРЫ СЦЕНЫ
 

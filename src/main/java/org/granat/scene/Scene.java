@@ -17,6 +17,18 @@ public class Scene {
     @Getter
     private final static byte colorGradationDensity = 0;
 
+    @Getter
+    private final static byte superstructuresPosition = 1;
+
+    @Getter
+    private final static byte colorGradationSuperstructures = 1;
+
+    @Getter
+    private final static byte girdersPosition = 2;
+
+    @Getter
+    private final static byte colorGradationGirders = 2;
+
     //?---------------------------------------------------------------------------------------------------------INTERNAL
 
     /**
@@ -97,11 +109,31 @@ public class Scene {
         this.currentColorGradation = colorGradationDensity;
     }
 
+    public void setColorGradationSuperstructures() {
+        this.currentColorGradation = colorGradationSuperstructures;
+    }
+
+    public void setColorGradationGirders() {
+        this.currentColorGradation = colorGradationGirders;
+    }
+
     //?----------------------------------------------------------------------------------------------------------GETTERS
 
     public long getSceneDensityParameterValue() {
         if (this.pointParameters != null && this.pointParameters.length > densityPosition)
             return pointParameters[densityPosition];
         return 1;
+    }
+
+    public double getSceneSuperstructuresParameterValue() {
+        if (this.pointParameters != null && this.pointParameters.length > superstructuresPosition)
+            return pointParameters[densityPosition];
+        return 10;
+    }
+
+    public double getSceneGirdersParameterValue() {
+        if (this.pointParameters != null && this.pointParameters.length > girdersPosition)
+            return pointParameters[densityPosition];
+        return 10;
     }
 }

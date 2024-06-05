@@ -32,6 +32,32 @@ public enum ColorGradation {
             point.getColor()[1] = point.getDensityParameterValue() / parameters[0];
             point.getColor()[2] = 0.0;
         }
+    },
+    SUPERSTRUCTURES {
+        /**
+         * Цветовая окраска точки в зависимости от количества точек в срезах по трём измерениям.
+         * @param parameters [0] - максимальное количество точек в срезе.
+         */
+        @Override
+        public void setColor(Point point, double[] parameters) {
+            if (parameters.length == 0 || parameters[0] == 0) return;
+            point.getColor()[0] = (parameters[0] - point.getSuperstructuresParameterValue()) / parameters[0];
+            point.getColor()[1] = point.getSuperstructuresParameterValue() / parameters[0];
+            point.getColor()[2] = point.getSuperstructuresParameterValue() * point.getSuperstructuresParameterValue() / parameters[0];
+        }
+    },
+    GIRDERS {
+        /**
+         * Цветовая окраска точки в зависимости от количества точек в срезах по трём измерениям.
+         * @param parameters [0] - максимальное количество точек в срезе.
+         */
+        @Override
+        public void setColor(Point point, double[] parameters) {
+            if (parameters.length == 0 || parameters[0] == 0) return;
+            point.getColor()[0] = (parameters[0] - point.getGirdersParameterValue()) / parameters[0];
+            point.getColor()[1] = point.getGirdersParameterValue() / parameters[0];
+            point.getColor()[2] = point.getSuperstructuresParameterValue() * point.getSuperstructuresParameterValue() / parameters[0];;
+        }
     };
 
     public abstract void setColor(Point point, double[] parameters);

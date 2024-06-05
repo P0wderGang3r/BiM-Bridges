@@ -68,9 +68,6 @@ public class HelperHeightGroupsMetadataFiltered {
      * @param data карта высот; rows, cols - размерность карты высот
      * @return карта высот; rows, cols - размерность карты высот
      */
-    /* TODO:
-        выбрать максимальный класс такой, который идёт сразу после следующего максимального класса
-     */
     public static Map<String, Double> run(Supplier<Stream<Point>> ignored, Map<String, Map<String, Double>> data) {
         Map<String, Double> metadata = data.get("metadata");
         Map<String, Double> heightMapGroupsMetadata = data.get("height-map-groups-metadata");
