@@ -3,14 +3,35 @@ package org.granat.processors.helpers.height_map.algo;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
  * Помощник анализа облака точек - разметка срезов на карте высот.
  */
 public class HelperHeightGroupsMetadata {
+
+    private static final String groupMedRegex = "/(group-med-)[0-9]+/gm";
+
+    private static Map<String, Double> buildGroupsMetadataSortedMap(
+            Map<String, Double> heightMapGroupsMetadata) {
+        Map<String, Double> groupsMetadataSorted = new HashMap<>();
+
+        List<String> order = heightMapGroupsMetadata.entrySet().stream()
+                .filter(entry -> Pattern.matches(groupMedRegex, entry.getKey()))
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .toList();
+
+        for (int index = 0; index < order.size(); index++) {
+            groupsMetadataSorted.put("group-position-" + order.get(index).split("-")[2], (double) index);
+        }
+
+        return groupsMetadataSorted;
+    }
 
     private static Map<String, Double> buildClassesMetadataMap(
             Map<String, Double> heightMapClassesMetadata,
@@ -73,6 +94,7 @@ public class HelperHeightGroupsMetadata {
 
         //Заполняем классы в обозначенных границах классов в карте высот
         Map<String, Double> heightMapGroupsMetadata = buildClassesMetadataMap(heightMapClassesMetadata, heightMapGroups);
+        heightMapGroupsMetadata.putAll(buildGroupsMetadataSortedMap(heightMapGroupsMetadata));
 
         return heightMapGroupsMetadata;
     }

@@ -6,7 +6,7 @@ import org.granat.processors.helpers.height_map.base.HelperHeightMap;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapBorders;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapClasses;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapDelta;
-import org.granat.processors.helpers.height_map.algo.HelperHeightGroupsFiltered;
+import org.granat.processors.helpers.height_map.algo.HelperHeightGroupsMetadataFiltered;
 import org.granat.processors.helpers.height_map.algo.HelperHeightClassesMetadata;
 import org.granat.processors.helpers.height_map.algo.HelperHeightGroups;
 import org.granat.scene.objects.Point;
@@ -32,14 +32,15 @@ public class FilterGirders {
     IHelper helperHeightMapClassesMetadata = HelperHeightClassesMetadata::run;
     IHelper helperHeightMapGroups = HelperHeightGroups::run;
     IHelper helperHeightMapGroupsMetadata = HelperHeightGroupsMetadata::run;
-    IHelper helperHeightMapGroupsFiltered = HelperHeightGroupsFiltered::run;
+    IHelper helperHeightMapGroupsMetadataFiltered = HelperHeightGroupsMetadataFiltered::run;
 
     private void filter(
             Supplier<Stream<Point>> pointsStreams,
             Map<String, Double> parameters,
             Map<String, Double> heightMap,
             Map<String, Double> heightMapClasses,
-            Map<String, Double> heightMapGroupsFiltered
+            Map<String, Double> heightMapGroups,
+            Map<String, Double> heightMapGroupsMetadataFiltered
     ) {
         //Количество строк в матрице
         int rows = parameters.get("rows").intValue();
@@ -55,10 +56,25 @@ public class FilterGirders {
         pointsStreams.get().forEach(point -> {
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
+                    //Если точки с предоставленными координатами нет, пропускаем
                     if (heightMap.get(row + "-" + col) == null) continue;
-                    if (heightMapGroupsFiltered.get(
-                            "class-" + heightMapClasses.get(row + "-" + col).intValue()) == null) continue;
-                    //TODO: если точка находится на совпадающих координатах, то присваиваем класс
+
+                    //Если сопоставленной с классом искомой группы нет, пропускаем
+                    //Для удобства записываем текущий класс ...
+                    int currentClass = heightMapClasses.get(row + "-" + col).intValue();
+                    //... и текущую группу.
+                    Double currentGroup = heightMapGroupsMetadataFiltered.get(
+                            "group-" + heightMapGroups.get("class-" + currentClass).intValue());
+                    if (currentGroup == null) continue;
+
+                    //Если точка находится на совпадающих координатах, то присваиваем класс
+                    if ((int) ((point.getCoordinates()[axisRow] + 1) * rows) == row &&
+                            (int) ((point.getCoordinates()[axisCol] + 1) * cols) == col &&
+                            heightMapGroupsMetadataFiltered.get("group-min-" + currentGroup.intValue()) <= axisVal &&
+                            heightMapGroupsMetadataFiltered.get("group-max-" + currentGroup.intValue()) >= axisVal
+                    ) {
+                        point.setLowerGirderClassValue(currentClass);
+                    }
                 }
             }
         });
@@ -70,10 +86,6 @@ public class FilterGirders {
      * @param parameters "radius" - предельное расстояние между точками
      */
     public void run(Supplier<Stream<Point>> pointsStreams, Map<String, Double> parameters) {
-        //Функция, которая проводит максимальное количество разделяющих линий в пространстве
-        //Множество таких линий должно быть приблизительно равной удалённости между границами классов
-        //На входе - множество точек после применения фильтра поиска пролётных строений моста
-
         Map<String, Map<String, Double>> data = new HashMap<>();
         data.put("metadata", parameters);
 
@@ -109,11 +121,10 @@ public class FilterGirders {
 
         //Выбирается множество нижних классов на приблизительно одинаковой высоте
         //Выбрать нижние поверхности балок (количество -> max != max)
-        Map<String, Double> heightMapGroupsFiltered = helperHeightMapGroupsFiltered.run(null, data);
-        data.remove("height-map-groups"); heightMapGroups = null; //Высвобождение памяти
+        Map<String, Double> heightMapGroupsMetadataFiltered = helperHeightMapGroupsMetadataFiltered.run(null, data);
         data.remove("height-map-groups-metadata"); heightMapGroupsMetadata = null; //Высвобождение памяти
 
         //Разметить точки в соответствии с извлечённой информацией
-        filter(pointsStreams, parameters, heightMap, heightMapClasses, heightMapGroupsFiltered);
+        filter(pointsStreams, parameters, heightMap, heightMapClasses, heightMapGroups, heightMapGroupsMetadataFiltered);
     }
 }

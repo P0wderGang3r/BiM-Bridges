@@ -14,6 +14,8 @@ public class Point {
     private final static byte densityPosition = 0;
     @Getter
     private final static byte superstructurePosition = 1;
+    @Getter
+    private final static byte girderPosition = 2;
 
     //?-------------------------------------------------------------------------------------------------------------DATA
 
@@ -132,5 +134,9 @@ public class Point {
 
     public void setSuperstructureParameterValue(int value) {
         setParameterValue(superstructurePosition, value);
+    }
+
+    public void setLowerGirderClassValue(int value) {
+        setParameterValue(girderPosition, value);
     }
 }
