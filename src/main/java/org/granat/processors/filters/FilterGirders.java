@@ -24,17 +24,17 @@ import java.util.stream.Stream;
  */
 public class FilterGirders {
 
-    IHelper helperHeightMap = HelperHeightMap::run;
-    IHelper helperHeightMapDelta = HelperHeightMapDelta::run;
-    IHelper helperHeightMapBorders = HelperHeightMapBorders::run;
-    IHelper helperHeightMapClasses = HelperHeightMapClasses::run;
+    static IHelper helperHeightMap = HelperHeightMap::run;
+    static IHelper helperHeightMapDelta = HelperHeightMapDelta::run;
+    static IHelper helperHeightMapBorders = HelperHeightMapBorders::run;
+    static IHelper helperHeightMapClasses = HelperHeightMapClasses::run;
 
-    IHelper helperHeightMapClassesMetadata = HelperHeightClassesMetadata::run;
-    IHelper helperHeightMapGroups = HelperHeightGroups::run;
-    IHelper helperHeightMapGroupsMetadata = HelperHeightGroupsMetadata::run;
-    IHelper helperHeightMapGroupsMetadataFiltered = HelperHeightGroupsMetadataFiltered::run;
+    static IHelper helperHeightMapClassesMetadata = HelperHeightClassesMetadata::run;
+    static IHelper helperHeightMapGroups = HelperHeightGroups::run;
+    static IHelper helperHeightMapGroupsMetadata = HelperHeightGroupsMetadata::run;
+    static IHelper helperHeightMapGroupsMetadataFiltered = HelperHeightGroupsMetadataFiltered::run;
 
-    private void filter(
+    private static void filter(
             Supplier<Stream<Point>> pointsStreams,
             Map<String, Double> parameters,
             Map<String, Double> heightMap,
@@ -85,7 +85,7 @@ public class FilterGirders {
      * @param pointsStreams облако точек
      * @param parameters "radius" - предельное расстояние между точками
      */
-    public void run(Supplier<Stream<Point>> pointsStreams, Map<String, Double> parameters) {
+    public static void run(Supplier<Stream<Point>> pointsStreams, Map<String, Double> parameters) {
         Map<String, Map<String, Double>> data = new HashMap<>();
         data.put("metadata", parameters);
 

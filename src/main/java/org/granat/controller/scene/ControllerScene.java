@@ -84,7 +84,9 @@ public record ControllerScene(Scene scene) {
         return scene.getPosition();
     }
 
-    //-------------------------------------------------------------------------------------------ГРАДАЦИЯ ТОЧЕК ПО ЦВЕТУ
+    //!------------------------------------------------------------------------------------------ГРАДАЦИЯ ТОЧЕК ПО ЦВЕТУ
+
+    //-------------------------------------------------------------------------------------------ИНТЕНСИВНОСТЬ ИЗЛУЧЕНИЯ
 
     public void setColorGradationIntensity() {
         this.scene.setColorGradationIntensity();
@@ -93,6 +95,8 @@ public record ControllerScene(Scene scene) {
                 .flatMap(Arrays::stream)
                 .forEach(point -> ColorGradation.INTENSITY.setColor(point, null));
     }
+
+    //---------------------------------------------------------------------------------------------------ПЛОТНОСТЬ ТОЧЕК
 
     public void setColorGradationDensity() {
         this.scene.setColorGradationDensity();
@@ -110,6 +114,18 @@ public record ControllerScene(Scene scene) {
                 .map(PointCloud::getPoints)
                 .flatMap(Arrays::stream)
                 .forEach(point -> ColorGradation.DENSITY.setColor(point, parameters));
+    }
+
+    //-----------------------------------------------------------------------------------------ПРОЛЁТЫ МОСТОВЫХ СТРОЕНИЙ
+
+    public void setColorGradationSuperstructures() {
+        //TODO: ВАЖНО!!
+    }
+
+    //----------------------------------------------------------------------------------БАЛКИ ПРОЛЁТОВ МОСТОВЫХ СТРОЕНИЙ
+
+    public void setColorGradationGirders() {
+        //TODO: ВАЖНО!!
     }
 
     //---------------------------------------------------------------------------------------------------ПАРАМЕТРЫ СЦЕНЫ

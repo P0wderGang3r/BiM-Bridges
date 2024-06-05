@@ -15,15 +15,15 @@ import java.util.stream.Stream;
  * Класс, отвечающий за выбор одного из срезов, соответствующих горизонтальным опорным строениям мостовых сооружений.
  */
 public class FilterSuperstructures {
-    IHelper helperDensityVector = HelperDensity::run;
-    IHelper helperDensityVectorSlice = HelperDensitySlice::run;
+    static IHelper helperDensityVector = HelperDensity::run;
+    static IHelper helperDensityVectorSlice = HelperDensitySlice::run;
 
     /**
      *
      * @param pointsStreams облако точек
      * @param parameters "radius" - предельное расстояние между точками
      */
-    public void run(Supplier<Stream<Point>> pointsStreams, Map<String, Double> parameters) {
+    public static void run(Supplier<Stream<Point>> pointsStreams, Map<String, Double> parameters) {
         //Высота вектора
         int length = parameters.get("length").intValue();
 

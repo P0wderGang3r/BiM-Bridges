@@ -2,6 +2,8 @@ package org.granat.processors;
 
 import org.granat.controller.scene.ControllerScene;
 import org.granat.processors.filters.FilterDensity;
+import org.granat.processors.filters.FilterGirders;
+import org.granat.processors.filters.FilterSuperstructures;
 import org.granat.processors.filters.IFilter;
 import org.granat.scene.objects.Point;
 
@@ -63,7 +65,49 @@ public enum Processors {
             processor.run(controllerScene::getPointsStream, parameters);
         }
     },
-    GIRDER {
+    SUPERSTRUCTURES {
+        final Map<String, Double> parameters = new HashMap<>();
+
+        final IFilter processor = FilterSuperstructures::run;
+
+        private void initParameters(ControllerScene controllerScene) {
+            //TODO: ВАЖНО!!
+        }
+
+        public void setParameters(Map<String, Double> parameters) { }
+
+        @Override
+        public void preprocess(ControllerScene controllerScene) { }
+
+        @Override
+        public void process(ControllerScene controllerScene) {
+            initParameters(controllerScene);
+            Supplier<Stream<Point>> pointsStreams = controllerScene::getPointsStream;
+            processor.run(pointsStreams, parameters);
+        }
+    },
+    GIRDERS {
+        final Map<String, Double> parameters = new HashMap<>();
+
+        final IFilter processor = FilterGirders::run;
+
+        private void initParameters(ControllerScene controllerScene) {
+            //TODO: ВАЖНО!!
+        }
+
+        public void setParameters(Map<String, Double> parameters) { }
+
+        @Override
+        public void preprocess(ControllerScene controllerScene) { }
+
+        @Override
+        public void process(ControllerScene controllerScene) {
+            initParameters(controllerScene);
+            Supplier<Stream<Point>> pointsStreams = controllerScene::getPointsStream;
+            processor.run(pointsStreams, parameters);
+        }
+    },
+    DEFLECTION {
         final Map<String, Double> parameters = new HashMap<>();
 
         final IFilter preprocessor = FilterDensity::preprocess;
@@ -71,17 +115,13 @@ public enum Processors {
         final IFilter processor = FilterDensity::filter;
 
         private void initParameters(ControllerScene controllerScene) {
-
+            //TODO: ВАЖНО!!
         }
 
-        public void setParameters(Map<String, Double> parameters) {
-
-        }
+        public void setParameters(Map<String, Double> parameters) { }
 
         @Override
-        public void preprocess(ControllerScene controllerScene) {
-
-        }
+        public void preprocess(ControllerScene controllerScene) { }
 
         @Override
         public void process(ControllerScene controllerScene) {

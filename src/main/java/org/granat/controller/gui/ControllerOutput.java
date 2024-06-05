@@ -43,6 +43,16 @@ public record ControllerOutput(
                                 controllerScene::updateDensitySceneParameter,
                                 controllerScene::resetColorGradationDensity));
                 break;
+            case FILTER_SUPERSTRUCTURES:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerFilters::runFilterSuperstructures));
+                break;
+            case FILTER_GIRDERS:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerFilters::runFilterGirders));
+                break;
 
             case SHOW_INTENSITY:
                 controllerServer.setPendingOperation(
@@ -53,6 +63,16 @@ public record ControllerOutput(
                 controllerServer.setPendingOperation(
                         State.RUNNING,
                         List.of(controllerScene::setColorGradationDensity));
+                break;
+            case SHOW_SUPERSTRUCTURES:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setColorGradationSuperstructures));
+                break;
+            case SHOW_GIRDERS:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setColorGradationGirders));
                 break;
 
             case SHOW_FILTER_EMPTY:

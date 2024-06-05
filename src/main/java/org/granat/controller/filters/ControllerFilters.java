@@ -36,4 +36,22 @@ public record ControllerFilters(
         Processors.DENSITY.process(controllerScene);
         System.out.println("ENDED DENSITY FILTER: " + this.getClass());
     }
+
+    public void runFilterSuperstructures() {
+        System.out.println("STARTED SUPERSTRUCTURES FILTER: " + this.getClass());
+        Processors.SUPERSTRUCTURES.process(controllerScene);
+        System.out.println("ENDED SUPERSTRUCTURES FILTER: " + this.getClass());
+    }
+
+    public void runFilterGirders() {
+        System.out.println("STARTED GIRDERS FILTER: " + this.getClass());
+        Processors.GIRDERS.process(controllerScene);
+        System.out.println("ENDED GIRDERS FILTER: " + this.getClass());
+    }
+
+    public void runAlgoDeflection() {
+        System.out.println("STARTED DEFLECTION ALGO: " + this.getClass());
+        Processors.DEFLECTION.process(controllerScene);
+        System.out.println("ENDED DEFLECTION ALGO: " + this.getClass());
+    }
 }
