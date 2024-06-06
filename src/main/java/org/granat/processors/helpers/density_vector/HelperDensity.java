@@ -34,7 +34,7 @@ public class HelperDensity {
         pointsStreamSupplier.get().forEach(
                 point -> {
                     //Ставим в соответствие координате соответствующее место в векторе по оси axis от 0 до length
-                    int current = (int) ((point.getCoordinates()[axis] / norm + 1) / 2 * length);
+                    int current = (int) ((point.getCoordinates()[axis] * norm + 1) / 2 * length);
                     vector.putIfAbsent("" + current, 0.0);
                     //Увеличиваем вес на единицу
                     vector.put("" + current, vector.get("" + current) + 1.0);

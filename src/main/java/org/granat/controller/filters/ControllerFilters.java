@@ -27,19 +27,31 @@ public record ControllerFilters(
 
     public void runDensityPreprocess() {
         System.out.println("STARTED DENSITY PREPROCESS: " + this.getClass());
-        Processors.DENSITY.preprocess(controllerScene);
+        try {
+            Processors.DENSITY.preprocess(controllerScene);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         System.out.println("ENDED DENSITY PREPROCESS: " + this.getClass());
     }
 
     public void runDensityFilter() {
         System.out.println("STARTED DENSITY FILTER: " + this.getClass());
-        Processors.DENSITY.process(controllerScene);
+        try {
+            Processors.DENSITY.process(controllerScene);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         System.out.println("ENDED DENSITY FILTER: " + this.getClass());
     }
 
     public void runFilterSuperstructures() {
         System.out.println("STARTED SUPERSTRUCTURES FILTER: " + this.getClass());
-        Processors.SUPERSTRUCTURES.process(controllerScene);
+        try {
+            Processors.SUPERSTRUCTURES.process(controllerScene);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         System.out.println("ENDED SUPERSTRUCTURES FILTER: " + this.getClass());
 
         try {
@@ -51,7 +63,11 @@ public record ControllerFilters(
 
     public void runFilterGirders() {
         System.out.println("STARTED GIRDERS FILTER: " + this.getClass());
-        Processors.GIRDERS.process(controllerScene);
+        try {
+            Processors.GIRDERS.process(controllerScene);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         System.out.println("ENDED GIRDERS FILTER: " + this.getClass());
 
         try {
@@ -63,7 +79,11 @@ public record ControllerFilters(
 
     public void runAlgoDeflection() {
         System.out.println("STARTED DEFLECTION ALGO: " + this.getClass());
-        Processors.DEFLECTION.process(controllerScene);
+        try {
+            Processors.DEFLECTION.process(controllerScene);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         System.out.println("ENDED DEFLECTION ALGO: " + this.getClass());
     }
 }

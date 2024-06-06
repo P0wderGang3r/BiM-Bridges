@@ -36,6 +36,8 @@ public class HelperHeightMap {
         int axisCol = metadata.get("axis-col").intValue();
         //Номер измерения, с которого снимаются значения для матрицы
         int axisVal = metadata.get("axis-val").intValue();
+        //Нормализация
+        double norm = metadata.get("norm");
         //Количество элементов матрицы
         AtomicInteger amount = new AtomicInteger(0);
 
@@ -44,9 +46,9 @@ public class HelperHeightMap {
         pointsStreamSupplier.get().forEach(
                 point -> {
                     //Ставим в соответствие координате строку от 0 до rows
-                    int row = (int) ((point.getCoordinates()[axisRow] + 1) * rows);
+                    int row = (int) ((point.getCoordinates()[axisRow] * norm + 1) / 2 * rows);
                     //Ставим в соответствие координате столбец от 0 до cols
-                    int col = (int) ((point.getCoordinates()[axisCol] + 1) * cols);
+                    int col = (int) ((point.getCoordinates()[axisCol] * norm + 1) / 2 * cols);
                     //Увеличиваем количество элементов матрицы, если искомого элемента ещё не существует
                     if (matrix.get(row + "-" + col) == null) amount.getAndIncrement();
                     //Создаём новый элемент матрицы

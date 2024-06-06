@@ -77,7 +77,7 @@ public enum Processors {
         private void initParameters(ControllerScene controllerScene) {
             parameters.putIfAbsent("length", 45.0);
             parameters.putIfAbsent("axis", 2.0);
-            parameters.putIfAbsent("norm", controllerScene.getMaxBound());
+            parameters.putIfAbsent("norm", controllerScene.getMaxBoundDivider());
         }
 
         public void setParameters(Map<String, Double> parameters) { }
@@ -106,7 +106,7 @@ public enum Processors {
             parameters.putIfAbsent("axis-val", 2.0);
             parameters.putIfAbsent("sequential-number", 1.0);
             parameters.putIfAbsent("direction", -1.0);
-            parameters.putIfAbsent("norm", controllerScene.getMaxBound());
+            parameters.putIfAbsent("norm", controllerScene.getMaxBoundDivider());
         }
 
         public void setParameters(Map<String, Double> parameters) { }

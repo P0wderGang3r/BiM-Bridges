@@ -52,6 +52,8 @@ public class FilterGirders {
         int axisCol = parameters.get("axis-col").intValue();
         //Номер измерения, с которого снимаются значения для матрицы
         int axisVal = parameters.get("axis-val").intValue();
+        //Нормализация
+        double norm = parameters.get("norm");
 
         pointsStreams.get().forEach(point -> {
             for (int row = 0; row < rows; row++) {
@@ -66,10 +68,9 @@ public class FilterGirders {
                     Double currentGroup = heightMapGroupsMetadataFiltered.get(
                             "group-" + heightMapGroups.get("class-" + currentClass).intValue());
                     if (currentGroup == null) continue;
-
                     //Если точка находится на совпадающих координатах, то присваиваем класс
-                    if ((int) ((point.getCoordinates()[axisRow] + 1) * rows) == row &&
-                            (int) ((point.getCoordinates()[axisCol] + 1) * cols) == col &&
+                    if ((int) ((point.getCoordinates()[axisRow] * norm + 1) / 2 * rows) == row &&
+                            (int) ((point.getCoordinates()[axisCol] * norm + 1) / 2 * cols) == col &&
                             heightMapGroupsMetadataFiltered.get("group-min-" + currentGroup.intValue()) <= axisVal &&
                             heightMapGroupsMetadataFiltered.get("group-max-" + currentGroup.intValue()) >= axisVal
                     ) {

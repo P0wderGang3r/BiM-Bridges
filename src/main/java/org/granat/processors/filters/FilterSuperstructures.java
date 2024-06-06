@@ -52,7 +52,7 @@ public class FilterSuperstructures {
         //Размечаются все точки по принадлежности выбросам в векторе плотностей
         AtomicReference<Double> currentSlice = new AtomicReference<>(null);
         pointsStreams.get().forEach(point -> {
-            currentSlice.set(verticalSlices.get("" + (int) ((point.getCoordinates()[axis] / norm + 1) / 2 * length)));
+            currentSlice.set(verticalSlices.get("" + (int) ((point.getCoordinates()[axis] * norm + 1) / 2 * length)));
             if (currentSlice.get() != null) {
                 counter.getAndIncrement();
                 point.setSuperstructureParameterValue(currentSlice.get().intValue());
