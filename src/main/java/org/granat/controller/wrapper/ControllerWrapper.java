@@ -41,7 +41,8 @@ public class ControllerWrapper {
         PointCloud pointCloud = new PointCloud();
         pointCloud.setPoints(this.wrapper.getData());
         pointCloud.setPosition(new double[]{0, 0, 0});
-        pointCloud.setRotation(new double[]{0, 0, Math.PI / 2});
+        pointCloud.setRotation(new double[]{0, 0, 0});
+        this.controllerScene.addRotation(new double[]{0, 0, Math.PI / 2}, 1.0);
         this.controllerScene.addPointCloud(pointCloud);
     }
 

@@ -8,8 +8,11 @@ import org.granat.processors.filters.FilterSuperstructures;
 import org.granat.processors.filters.IFilter;
 import org.granat.scene.objects.Point;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -38,7 +41,7 @@ public enum Processors {
             parameters.putIfAbsent("epsilon-1", 0.33 * controllerScene.getMaxBound());
             parameters.putIfAbsent("epsilon-2", 0.01 * controllerScene.getMaxBound());
             parameters.putIfAbsent("delta", 0.05 * controllerScene.getMaxBound());
-            parameters.putIfAbsent("threshold", 24 * 1000000.0);
+            parameters.putIfAbsent("threshold", (double) 12 * controllerScene.getPointsStream().count());
         }
 
         public void setParameters(Map<String, Double> parameters) {
@@ -72,8 +75,9 @@ public enum Processors {
         final IFilter processor = FilterSuperstructures::run;
 
         private void initParameters(ControllerScene controllerScene) {
-            parameters.put("length", 100.0);
+            parameters.putIfAbsent("length", 45.0);
             parameters.putIfAbsent("axis", 2.0);
+            parameters.putIfAbsent("norm", controllerScene.getMaxBound());
         }
 
         public void setParameters(Map<String, Double> parameters) { }
@@ -85,7 +89,7 @@ public enum Processors {
         public void process(ControllerScene controllerScene) {
             initParameters(controllerScene);
             Supplier<Stream<Point>> pointsStreams = () ->
-                    controllerScene.getPointsStream().filter(Point::getDensityFilterValue);
+                    controllerScene.getPointsStream().filter(point -> point.getDensityFilterValue());
             processor.run(pointsStreams, parameters);
         }
     },
@@ -95,13 +99,14 @@ public enum Processors {
         final IFilter processor = FilterGirders::run;
 
         private void initParameters(ControllerScene controllerScene) {
-            parameters.put("rows", 100.0);
-            parameters.put("cols", 100.0);
+            parameters.putIfAbsent("rows", 100.0);
+            parameters.putIfAbsent("cols", 100.0);
             parameters.putIfAbsent("axis-row", 0.0);
             parameters.putIfAbsent("axis-col", 1.0);
             parameters.putIfAbsent("axis-val", 2.0);
             parameters.putIfAbsent("sequential-number", 1.0);
             parameters.putIfAbsent("direction", -1.0);
+            parameters.putIfAbsent("norm", controllerScene.getMaxBound());
         }
 
         public void setParameters(Map<String, Double> parameters) { }
@@ -112,9 +117,16 @@ public enum Processors {
         @Override
         public void process(ControllerScene controllerScene) {
             initParameters(controllerScene);
+            AtomicLong upperSuperstructure = new AtomicLong(0);
+            controllerScene.getPointsStream()
+                    .map(Point::getSuperstructuresParameterValue)
+                    .reduce(Math::max)
+                    .ifPresent(upperSuperstructure::set);
+
             Supplier<Stream<Point>> pointsStreams = () ->
                     controllerScene.getPointsStream().filter(point ->
-                            point.getParameterValue(Point.getSuperstructuresPosition()) == 0);
+                            point.getSuperstructuresParameterValue() == upperSuperstructure.get());
+
             processor.run(pointsStreams, parameters);
         }
     },

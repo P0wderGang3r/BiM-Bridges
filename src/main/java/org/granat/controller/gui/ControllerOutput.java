@@ -46,12 +46,14 @@ public record ControllerOutput(
             case FILTER_SUPERSTRUCTURES:
                 controllerServer.setPendingOperation(
                         State.RUNNING,
-                        List.of(controllerFilters::runFilterSuperstructures));
+                        List.of(controllerFilters::runFilterSuperstructures,
+                                controllerScene::resetColorGradationSuperstructures));
                 break;
             case FILTER_GIRDERS:
                 controllerServer.setPendingOperation(
                         State.RUNNING,
-                        List.of(controllerFilters::runFilterGirders));
+                        List.of(controllerFilters::runFilterGirders,
+                                controllerScene::resetColorGradationGirders));
                 break;
 
             case SHOW_INTENSITY:

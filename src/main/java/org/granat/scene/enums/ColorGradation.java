@@ -41,9 +41,12 @@ public enum ColorGradation {
         @Override
         public void setColor(Point point, double[] parameters) {
             if (parameters.length == 0 || parameters[0] == 0) return;
-            point.getColor()[0] = (parameters[0] - point.getSuperstructuresParameterValue()) / parameters[0];
-            point.getColor()[1] = point.getSuperstructuresParameterValue() / parameters[0];
-            point.getColor()[2] = point.getSuperstructuresParameterValue() * point.getSuperstructuresParameterValue() / parameters[0];
+            int currentColorBit = 7 - (int) point.getSuperstructuresParameterValue();
+            point.getColor()[0] = currentColorBit % 2;
+            currentColorBit /= 2;
+            point.getColor()[1] = currentColorBit % 2;
+            currentColorBit /= 2;
+            point.getColor()[2] = currentColorBit % 2;
         }
     },
     GIRDERS {
@@ -54,9 +57,12 @@ public enum ColorGradation {
         @Override
         public void setColor(Point point, double[] parameters) {
             if (parameters.length == 0 || parameters[0] == 0) return;
-            point.getColor()[0] = (parameters[0] - point.getGirdersParameterValue()) / parameters[0];
-            point.getColor()[1] = point.getGirdersParameterValue() / parameters[0];
-            point.getColor()[2] = point.getSuperstructuresParameterValue() * point.getSuperstructuresParameterValue() / parameters[0];;
+            int currentColorBit = 7 - (int) point.getGirdersParameterValue();
+            point.getColor()[0] = currentColorBit % 2;
+            currentColorBit /= 2;
+            point.getColor()[1] = currentColorBit % 2;
+            currentColorBit /= 2;
+            point.getColor()[2] = currentColorBit % 2;
         }
     };
 

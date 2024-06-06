@@ -65,15 +65,15 @@ public class Point {
     }
 
     public long getSuperstructuresParameterValue() {
-        if (this.parameters != null && this.parameters.length > densityPosition)
+        if (this.parameters != null && this.parameters.length > superstructuresPosition)
             return parameters[superstructuresPosition];
-        return 1;
+        return -1;
     }
 
     public long getGirdersParameterValue() {
-        if (this.parameters != null && this.parameters.length > densityPosition)
+        if (this.parameters != null && this.parameters.length > girdersPosition)
             return parameters[girdersPosition];
-        return 1;
+        return -1;
     }
 
     public boolean getFilterValue(int position) {

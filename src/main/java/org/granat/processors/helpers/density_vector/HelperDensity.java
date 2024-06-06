@@ -19,19 +19,22 @@ public class HelperDensity {
         Map<String, Double> metadata = data.get("metadata");
 
         if (metadata.get("length") == null ||
-                metadata.get("axis") == null) return null;
+                metadata.get("axis") == null ||
+                metadata.get("norm") == null) return null;
 
         //Высота вектора
         int length = metadata.get("length").intValue();
         //Номер измерения, с которого снимаются значения для матрицы
         int axis = metadata.get("axis").intValue();
+        //Нормализация
+        double norm = metadata.get("norm");
 
         Map<String, Double> vector = new HashMap<>();
 
         pointsStreamSupplier.get().forEach(
                 point -> {
                     //Ставим в соответствие координате соответствующее место в векторе по оси axis от 0 до length
-                    int current = (int) ((point.getCoordinates()[axis] + 1) * length);
+                    int current = (int) ((point.getCoordinates()[axis] / norm + 1) / 2 * length);
                     vector.putIfAbsent("" + current, 0.0);
                     //Увеличиваем вес на единицу
                     vector.put("" + current, vector.get("" + current) + 1.0);

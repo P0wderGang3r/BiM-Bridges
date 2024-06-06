@@ -4,6 +4,7 @@ import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -29,10 +30,13 @@ public class HelperDensitySlice {
 
         //Вычисляем среднее значение минимального и максимального элементов вектора
         AtomicReference<Double> max = new AtomicReference<>(0.0);
-        AtomicReference<Double> min = new AtomicReference<>();
+        AtomicReference<Double> min = new AtomicReference<>(0.0);
         densityVector.values().stream().findFirst().ifPresent(min::set);
         densityVector.forEach((key, value) -> {
-            max.set(Math.max(max.get(), value));
+            if (!key.equals("" + length / 2) &&
+                    !key.equals("" + (length / 2 - 1)) &&
+                    !key.equals("" + (length / 2 + 1)))
+                max.set(Math.max(max.get(), value));
             min.set(Math.min(max.get(), value));
         });
         AtomicReference<Double> med = new AtomicReference<>(0.0);

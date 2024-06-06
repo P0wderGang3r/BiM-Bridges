@@ -4,7 +4,7 @@ public enum InputMouseBinding {
     ROTATION {
         @Override
         public double[] interpretMouseInput(double[] deltaPos) {
-            return new double[] {0, deltaPos[0], -deltaPos[1]};
+            return new double[] {deltaPos[0], 0, -deltaPos[1]};
         }
     },
     POSITION {

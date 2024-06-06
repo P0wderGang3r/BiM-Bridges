@@ -41,12 +41,24 @@ public record ControllerFilters(
         System.out.println("STARTED SUPERSTRUCTURES FILTER: " + this.getClass());
         Processors.SUPERSTRUCTURES.process(controllerScene);
         System.out.println("ENDED SUPERSTRUCTURES FILTER: " + this.getClass());
+
+        try {
+            Thread.sleep(2500);
+        } catch (Exception e) {
+            return;
+        }
     }
 
     public void runFilterGirders() {
         System.out.println("STARTED GIRDERS FILTER: " + this.getClass());
         Processors.GIRDERS.process(controllerScene);
         System.out.println("ENDED GIRDERS FILTER: " + this.getClass());
+
+        try {
+            Thread.sleep(2500);
+        } catch (Exception e) {
+            return;
+        }
     }
 
     public void runAlgoDeflection() {

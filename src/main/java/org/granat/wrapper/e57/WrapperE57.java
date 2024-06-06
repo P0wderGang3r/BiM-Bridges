@@ -44,11 +44,11 @@ public class WrapperE57 implements IWrapper {
         long pointsNum = getPointsNum();
         PointsData pointsData = NativeE57.instance.getPointsData(filePath);
         double[][] data = new double[(int) pointsNum / Globals.wrapperInputSkip][4];
-        for (int index = 0; index < (int) pointsNum; index += Globals.wrapperInputSkip) {
-            data[index][0] = pointsData.coordsX.getDouble((long) index * Native.getNativeSize(Double.TYPE));
-            data[index][1] = pointsData.coordsY.getDouble((long) index * Native.getNativeSize(Double.TYPE));
-            data[index][2] = pointsData.coordsZ.getDouble((long) index * Native.getNativeSize(Double.TYPE));
-            data[index][3] = pointsData.intensity.getDouble((long) index * Native.getNativeSize(Double.TYPE));
+        for (int index = 0; index < (int) pointsNum / Globals.wrapperInputSkip; index += Globals.wrapperInputSkip) {
+            data[index ][0] = pointsData.coordsX.getDouble((long) (index * Globals.wrapperInputSkip) * Native.getNativeSize(Double.TYPE));
+            data[index][1] = pointsData.coordsY.getDouble((long) (index * Globals.wrapperInputSkip) * Native.getNativeSize(Double.TYPE));
+            data[index][2] = pointsData.coordsZ.getDouble((long) (index * Globals.wrapperInputSkip) * Native.getNativeSize(Double.TYPE));
+            data[index][3] = pointsData.intensity.getDouble((long) (index * Globals.wrapperInputSkip) * Native.getNativeSize(Double.TYPE));
         }
         return data;
     }
