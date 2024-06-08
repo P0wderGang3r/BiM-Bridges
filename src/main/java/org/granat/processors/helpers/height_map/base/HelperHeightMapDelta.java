@@ -18,17 +18,19 @@ public class HelperHeightMapDelta {
         //Преобразовываем карту высот в карту изменения высот
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
+                //Если элемент матрицы отсутствует, пропускаем.
+                if (matrix.get(row  + "-" + col) == null) continue;
                 //Если в матрице есть точка в следующей строке, то ...
                 if (matrix.get((row + 1) + "-" + col) != null) {
                     //... присваиваем изменение координаты по оси oY текущей точке.
-                    heightMapDelta.put(row + "-" + col,
+                    heightMapDelta.put("row-" + row + "-" + col,
                             matrix.get(row  + "-" + col) - matrix.get((row + 1) + "-" + col));
                     //Иначе считаем, что изменение равно null.
                 }
                 //Если в матрице есть точка в следующем столбце, то ...
                 if (matrix.get(row + "-" + (col + 1)) != null) {
                     //... присваиваем изменение координаты по оси oX текущей точке.
-                    heightMapDelta.put(row + "-" + col,
+                    heightMapDelta.put("col-" + row + "-" + col,
                             matrix.get(row  + "-" + col) - matrix.get(row + "-" + (col + 1)));
                     //Иначе считаем, что изменение равно null.
                 }

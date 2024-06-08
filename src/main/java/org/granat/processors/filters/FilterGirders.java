@@ -14,6 +14,7 @@ import org.granat.scene.objects.Point;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /*
@@ -101,16 +102,38 @@ public class FilterGirders {
         //Создаётся карта классов по карте высот
         Map<String, Double> heightMapBorders = helperHeightMapBorders.run(null, data);
         data.put("height-map-borders", heightMapBorders);
-        data.remove("height-map-delta"); heightMapDelta = null; //Высвобождение памяти
+        //data.remove("height-map-delta"); heightMapDelta = null; //Высвобождение памяти
 
         //Создаётся карта классов по карте высот
         Map<String, Double> heightMapClasses = helperHeightMapClasses.run(null, data);
         data.put("height-map-classes", heightMapClasses);
-        data.remove("height-map-borders"); heightMapBorders = null; //Высвобождение памяти
+        //data.remove("height-map-borders"); heightMapBorders = null; //Высвобождение памяти
 
         //Составляется карта метаданных классов (количество, минимумы, максимумы)
         Map<String, Double> heightMapClassesMetadata = helperHeightMapClassesMetadata.run(null, data);
         data.put("height-map-classes-metadata", heightMapClassesMetadata);
+
+        System.out.println(heightMapDelta.entrySet().stream().filter(entry -> Math.abs(entry.getValue()) > 0.1).collect(Collectors.toSet()));
+        /*
+        for (int index = 0; index < 1000; index++) {
+            for (int jindex = 0; jindex < 1000; jindex++) {
+                if (heightMap.get(index + "-" + jindex) != null) System.out.print("+");
+                else System.out.print(" ");
+            }
+            System.out.println();
+        }
+        System.out.println("-------------------------------------------------------------------------------------------");
+
+
+        for (int index = 0; index < 100; index++) {
+            for (int jindex = 0; jindex < 100; jindex++) {
+                if (heightMapBorders.get(index + "-" + jindex) != null) System.out.print("+");
+                else System.out.print(" ");
+            }
+            System.out.println();
+        }
+
+         */
 
         //Разбивается множество классов на группы по сходным высотам
         Map<String, Double> heightMapGroups = helperHeightMapGroups.run(null, data);
