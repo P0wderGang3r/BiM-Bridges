@@ -52,8 +52,8 @@ public class HelperHeightMap {
                     //Увеличиваем количество элементов матрицы, если искомого элемента ещё не существует
                     if (matrix.get(row + "-" + col) == null) amount.getAndIncrement();
                     //Создаём новый элемент матрицы
-                    matrix.put(row + "-" + col, Math.max(
-                            matrix.get(row + "-" + col) == null ? -1 : matrix.get(row + "-" + col),
+                    matrix.put(row + "-" + col, Math.min(
+                            matrix.getOrDefault(row + "-" + col, point.getCoordinates()[axisVal]),
                             point.getCoordinates()[axisVal]));
                 });
 

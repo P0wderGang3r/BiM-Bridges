@@ -20,8 +20,10 @@ public class HelperHeightGroups {
 
         //Проходясь по всем индексам классов ...
         for (int index = 0; index < classes; index++) {
+            if (classesMetadata.get("class-amount-" + index) == null) continue;
             //... и по индексам, которые нас в рамках алгоритма интересуют ...
             for (int indexComp = index + 1; indexComp < classes; indexComp++) {
+                if (classesMetadata.get("class-amount-" + indexComp) == null) continue;
                 //... если мы находим такое максимальное значение первого класса, которое лежит в пределах минимума и максимума второго класса ...
                 if (classesMetadata.get("class-max-" + index) > classesMetadata.get("class-min-" + indexComp) &&
                         classesMetadata.get("class-max-" + index) < classesMetadata.get("class-max-" + indexComp) ||

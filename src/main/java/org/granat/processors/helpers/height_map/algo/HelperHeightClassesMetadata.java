@@ -20,18 +20,27 @@ public class HelperHeightClassesMetadata {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                if (heightMapClasses.get(row + "" + col) != null) {
+                if (heightMapClasses.get(row + "-" + col) != null) {
                     //Устанавливаем максимальное значение класса как количество данных классов
                     classesMetadataMap.put("classes", Math.max(
                             classesMetadataMap.get("classes"), heightMapClasses.get(row + "-" + col)));
                     //Устанавливаем максимальное значение для текущего класса
-                    classesMetadataMap.put("class-max-" + heightMapClasses.get(row + "-" + col),
-                            Math.max(heightMap.get(row + "-" + col) == null ? -1.0 : heightMap.get(row + "-" + col),
+                    classesMetadataMap.put("class-max-" + heightMapClasses.get(row + "-" + col).intValue(),
+                            Math.max(classesMetadataMap.getOrDefault(
+                                            "class-max-" + heightMapClasses.get(row + "-" + col).intValue(),
+                                            heightMap.get(row + "-" + col)),
                                     heightMap.get(row + "-" + col)));
                     //Устанавливаем минимальное значение для текущего класса
-                    classesMetadataMap.put("class-min-" + heightMapClasses.get(row + "-" + col),
-                            Math.min(heightMap.get(row + "-" + col) == null ? 1.0 : heightMap.get(row + "-" + col),
+                    classesMetadataMap.put("class-min-" + heightMapClasses.get(row + "-" + col).intValue(),
+                            Math.min(classesMetadataMap.getOrDefault(
+                                            "class-min-" + heightMapClasses.get(row + "-" + col).intValue(),
+                                            heightMap.get(row + "-" + col)),
                                     heightMap.get(row + "-" + col)));
+                    //Устанавливаем минимальное значение для текущего класса
+                    classesMetadataMap.put("class-amount-" + heightMapClasses.get(row + "-" + col).intValue(),
+                            classesMetadataMap.getOrDefault(
+                                    "class-amount-" + heightMapClasses.get(row + "-" + col).intValue(),
+                                    0.0) + 1.0);
                 }
             }
         }

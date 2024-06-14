@@ -99,8 +99,8 @@ public enum Processors {
         final IFilter processor = FilterGirders::run;
 
         private void initParameters(ControllerScene controllerScene) {
-            parameters.putIfAbsent("rows", 1000.0);
-            parameters.putIfAbsent("cols", 1000.0);
+            parameters.putIfAbsent("rows", 1500.0);
+            parameters.putIfAbsent("cols", 1500.0);
             parameters.putIfAbsent("axis-row", 0.0);
             parameters.putIfAbsent("axis-col", 1.0);
             parameters.putIfAbsent("axis-val", 2.0);

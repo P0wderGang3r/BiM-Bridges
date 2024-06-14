@@ -75,9 +75,8 @@ public class HelperHeightGroupsMetadata {
         //Увеличиваем значение количества групп на 1 относительно максимального номера группы
         groupsMetadata.put("groups", groupsMetadata.get("groups") + 1.0);
 
-        System.out.println(groupsMetadata);
-
         for (int index = 0; index < groupsMetadata.get("groups"); index++) {
+            if (groupsMetadata.get("group-min-" + index) == null) continue;
             groupsMetadata.put("group-med-" + index,
                     (groupsMetadata.get("group-min-" + index) + groupsMetadata.get("group-max-" + index)) / 2);
         }

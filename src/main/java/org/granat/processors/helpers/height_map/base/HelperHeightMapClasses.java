@@ -17,17 +17,24 @@ public class HelperHeightMapClasses {
     private static List<String> markNeighbors(
             Map<String, Double> classesMap,
             Map<String, Double> heightMap,
-            double currentClass, int row, int col) {
-        if (heightMap.get(row + "-" + col) != null) return new ArrayList<>();
-
+            Map<String, Double> borderMap,
+            int row, int col) {
         List<String> markedNeighbors = new ArrayList<>();
 
-        for (int iterRow = row - 1; iterRow < row + 1; iterRow++) {
-            for (int iterCol = col - 1; iterCol < col + 1; iterCol++) {
+
+        for (int iterRow = row - 1; iterRow <= row + 1; iterRow++) {
+            for (int iterCol = col - 1; iterCol <= col + 1; iterCol++) {
                 if (iterRow == row && iterCol == col) continue;
+                /*
+                if (iterRow == row - 1 && iterCol == col - 1) continue;
+                if (iterRow == row + 1 && iterCol == col + 1) continue;
+                if (iterRow == row - 1 && iterCol == col + 1) continue;
+                if (iterRow == row + 1 && iterCol == col - 1) continue;
+                */
+                
                 if (heightMap.get(iterRow + "-" + iterCol) != null &&
+                        borderMap.get(iterRow + "-" + iterCol) == null &&
                         classesMap.get(iterRow + "-" + iterCol) == null) {
-                    classesMap.put(iterRow + "-" + iterCol, currentClass);
                     markedNeighbors.add(iterRow + "-" + iterCol);
                 }
             }
@@ -45,8 +52,6 @@ public class HelperHeightMapClasses {
         if (heightMap.get(row + "-" + col) == null) return false;
         if (borderMap.get(row + "-" + col) != null) return false;
 
-        classesMap.put(row + "-" + col, currentClass);
-
         Stack<String> classesFilled = new Stack<>();
         classesFilled.add(row + "-" + col);
 
@@ -56,8 +61,9 @@ public class HelperHeightMapClasses {
             currentElement = classesFilled.pop();
             iterRow = Integer.parseInt(currentElement.split("-")[0]);
             iterCol = Integer.parseInt(currentElement.split("-")[1]);
+            classesMap.put(iterRow + "-" + iterCol, currentClass);
 
-            classesFilled.addAll(markNeighbors(classesMap, heightMap, currentClass, iterRow, iterCol));
+            classesFilled.addAll(markNeighbors(classesMap, heightMap, borderMap, iterRow, iterCol));
         }
 
         return true;
@@ -73,8 +79,7 @@ public class HelperHeightMapClasses {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                if (heightMap.get(row + "" + col) != null)
-                    if (fillClass(classesMap, heightMap, bordersMap, currentClass, row, col)) currentClass++;
+                if (fillClass(classesMap, heightMap, bordersMap, currentClass, row, col)) currentClass++;
             }
         }
 

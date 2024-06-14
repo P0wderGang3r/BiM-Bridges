@@ -57,12 +57,13 @@ public enum ColorGradation {
         @Override
         public void setColor(Point point, double[] parameters) {
             if (parameters.length == 0 || parameters[0] == 0) return;
-            int currentColorBit = 7 - (int) point.getGirdersParameterValue();
-            point.getColor()[0] = currentColorBit % 2;
+            int originalColorBit = 1 + (int) point.getGirdersParameterValue();
+            int currentColorBit = 1 + (int) point.getGirdersParameterValue();
+            point.getColor()[0] = (double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005;
             currentColorBit /= 2;
-            point.getColor()[1] = currentColorBit % 2;
+            point.getColor()[1] = (double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005;
             currentColorBit /= 2;
-            point.getColor()[2] = currentColorBit % 2;
+            point.getColor()[2] = (double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005;
         }
     };
 

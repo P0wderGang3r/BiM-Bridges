@@ -15,7 +15,7 @@ public class HelperHeightMapBorders {
     /**
      * Алгоритм пометки границ в карте высот.
      */
-    private static Map<String, Double> buildBordersMap(Map<String, Double> heightMapDelta, AtomicReference<Double> med, int rows, int cols) {
+    private static Map<String, Double> buildBordersMap(Map<String, Double> heightMap, Map<String, Double> heightMapDelta, AtomicReference<Double> med, int rows, int cols) {
         Map<String, Double> bordersMap = new HashMap<>();
 
         //Помечаем границы классов в карте высот.
@@ -31,13 +31,6 @@ public class HelperHeightMapBorders {
                     bordersMap.put((row + 1) + "-" + col, 1.0);
                 }
 
-                //Если текущий элемент матрицы граничит с пустотой ...
-                if (heightMapDelta.get("row-" + row + "-" + col) != null &&
-                        heightMapDelta.get("row-" + (row + 1) + "-" + col) == null) {
-                    ///... то присваиваем текущему элементу матрицы и следующему значение границы.
-                    bordersMap.put(row + "-" + col, 1.0);
-                }
-
                 //Если в матрице есть изменение относительно точки в следующем столбце ...
                 if (heightMapDelta.get("col-" + row + "-" + col) != null &&
                         //... и если изменение больше, чем абсолютное отклонение, ...
@@ -47,10 +40,9 @@ public class HelperHeightMapBorders {
                     bordersMap.put(row + "-" + (col + 1), 1.0);
                 }
 
-                //Если текущий элемент матрицы граничит с пустотой ...
-                if (heightMapDelta.get("col-" + row + "-" + col) != null &&
-                        heightMapDelta.get("col-" + row + "-" + (col + 1)) == null) {
-                    ///... то присваиваем текущему элементу матрицы и следующему значение границы.
+                //Если текущий элемент матрицы пустой ...
+                if (heightMap.get(row + "-" + col) == null) {
+                    ///... то присваиваем текущему элементу матрицы значение границы.
                     bordersMap.put(row + "-" + col, 1.0);
                 }
             }
@@ -77,19 +69,16 @@ public class HelperHeightMapBorders {
 
         //Вычисляем центральную тенденцию всех значений матрицы на основе среднего арифметическое
         AtomicReference<Double> tendency = new AtomicReference<>(0.0);
-        heightMapDelta.forEach((key, value) -> tendency.getAndAccumulate(value, Double::sum));
-        System.out.println(tendency);
-        tendency.set(tendency.get() / (amount * 2));
-        System.out.println(amount);
+        heightMap.forEach((key, value) -> tendency.set(tendency.get() + value));
+        tendency.set(tendency.get() / (double) amount);
 
         //Вычисляем среднее абсолютное отклонение для всех значений матрицы
         AtomicReference<Double> med = new AtomicReference<>(0.0);
-        heightMapDelta.forEach((key, value) -> med.set(med.get() + Math.abs(value - tendency.get())));
+        heightMap.forEach((key, value) -> med.set(med.get() + Math.abs(value - tendency.get())));
         med.set(med.get() / (double) amount);
-        System.out.println(med.get());
 
         //Помечаем границы классов в карте высот
-        Map<String, Double> heightMapBorders = buildBordersMap(heightMapDelta, med, rows, cols);
+        Map<String, Double> heightMapBorders = buildBordersMap(heightMap, heightMapDelta, med, rows, cols);
 
         return heightMapBorders;
     }
