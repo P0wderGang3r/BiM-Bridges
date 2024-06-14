@@ -41,12 +41,14 @@ public class FilterSuperstructures {
 
         //Вычисляется множество плоскостей, в которых наблюдаются выбросы
         Map<String, Double> verticalSlices = helperDensityVectorSlice.run(null, data);
-        //data.remove("density-vector"); densityVector = null
+        data.remove("density-vector"); densityVector = null; //Очищение памяти
 
+        /*
         System.out.println("VECTOR");
         System.out.println(densityVector);
         System.out.println("SLICES");
         System.out.println(verticalSlices);
+         */
 
         AtomicInteger counter = new AtomicInteger(0);
         //Размечаются все точки по принадлежности выбросам в векторе плотностей
@@ -55,7 +57,7 @@ public class FilterSuperstructures {
             currentSlice.set(verticalSlices.get("" + (int) ((point.getCoordinates()[axis] * norm + 1) / 2 * length)));
             if (currentSlice.get() != null) {
                 counter.getAndIncrement();
-                point.setSuperstructureParameterValue(currentSlice.get().intValue());
+                point.setSuperstructureParameterValue(currentSlice.get().intValue() - 1);
             }
             else
                 point.setSuperstructureParameterValue(-1);
