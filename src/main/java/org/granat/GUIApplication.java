@@ -1,17 +1,17 @@
 package org.granat;
 
+import org.granat.controller.filters.ControllerFilters;
+import org.granat.controller.gui.ControllerCamera;
 import org.granat.controller.gui.ControllerFileChooser;
 import org.granat.controller.gui.ControllerInput;
 import org.granat.controller.gui.ControllerOutput;
-import org.granat.controller.gui.ControllerCamera;
-import org.granat.controller.filters.ControllerFilters;
 import org.granat.controller.scene.ControllerScene;
 import org.granat.controller.server.ControllerServer;
 import org.granat.controller.wrapper.ControllerWrapper;
 import org.granat.files.FileChooserGUI;
 import org.granat.files.IFileChooser;
 import org.granat.scene.Scene;
-import org.granat.ui.gui.input.*;
+import org.granat.ui.gui.input.InputThread;
 import org.granat.ui.gui.input.keyboard.InputKeyboard;
 import org.granat.ui.gui.input.keyboard.InputKeyboardConfig;
 import org.granat.ui.gui.input.mouse.InputMouse;

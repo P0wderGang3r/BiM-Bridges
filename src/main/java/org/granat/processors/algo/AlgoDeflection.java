@@ -5,33 +5,50 @@ import org.granat.processors.helpers.deflection_points.HelperDeflectionPoints;
 import org.granat.processors.helpers.height_map.base.HelperHeightMap;
 import org.granat.scene.objects.Point;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-/*
-2.2.6 Метод – вычисление профиля прогиба
-Нижние поверхности балок – это такие поверхности, которые имеют некоторую длину, ширину и прогиб. Для вычисления профиля прогиба балок требуется определить их края, а также некоторые иные параметры, зависящие от типа нагружения, для вычисления конечного значения.
-
-2.2.6.1 Дополнительные требования
-·	Выполнена фильтрация – вычисление множества поверхностей балок
-
-2.2.6.2 Входные данные
-·	Множество точек
-·	Тип нагружения
-
-2.2.6.3 Выходные данные
-·	Профиль прогиба
-
-2.2.6.4 Алгоритм
-·	Вычисляется карта высот (см. метод – вычисление карты высот): на вход подаётся положительное направление по оси Z;
-·	из полученной карты высот на основе типа нагружения извлекаются соответствующие данные для вычисления конечного значения профиля прогиба.
+/**
+ * Помощник анализа облака точек - вычисление опорных точек для дальнейшего получения профиля прогиба.
  */
 public class AlgoDeflection {
+    /**
+     * Функция извлечения цвета класса
+     */
+    public static double[] getColor(int girderClass) {
+        int originalColorBit = 1 + girderClass;
+        int currentColorBit = 1 + girderClass;
 
-    private static void calculateDeflection(Supplier<Stream<Point>> pointsStreamSupplier, Map<String, Double> parameters) {
+        double[] result = new double[3];
 
+        result[0] = ((double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005);
+        currentColorBit /= 2;
+        result[1] = ((double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005);
+        currentColorBit /= 2;
+        result[2] = ((double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005);
+
+        return result;
+    }
+
+    private static void calculateDeflection(
+            Map<String, Double> parameters,
+            Map<String, Double> deflectionPoints
+    ) {
+        Double girderClass = parameters.get("class");
+        Double start = deflectionPoints.get("start");
+        Double mid = deflectionPoints.get("mid");
+        Double end = deflectionPoints.get("end");
+        if (girderClass == null || start == null || end == null || mid == null) return;
+        if (girderClass.isNaN() || start.isNaN() || end.isNaN() || mid.isNaN()) return;
+
+        double result = mid - ((start + end) / 2);
+
+        System.out.println();
+        System.out.println(start + " " + mid + " " + end);
+        System.out.println(Arrays.toString(getColor(girderClass.intValue())) + " = " + result);
     }
 
     static IHelper helperHeightMap = HelperHeightMap::run;
@@ -49,6 +66,17 @@ public class AlgoDeflection {
         //Проводится поиск важных точек для вычисления прогиба
         Map<String, Double> deflectionPoints = helperDeflectionPoints.run(null, data);
 
-        calculateDeflection(pointsStreamSupplier, parameters);
+        /*
+        for (int index = 0; index < 500; index++) {
+            for (int jindex = 0; jindex < 500; jindex++) {
+                if (heightMap.get(index+ "-" + jindex) != null) System.out.print(" +");
+                else System.out.print(" .");
+            }
+            System.out.println();
+        }
+
+         */
+
+        calculateDeflection(parameters, deflectionPoints);
     }
 }

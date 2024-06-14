@@ -1,8 +1,8 @@
 package org.granat.processors.filters;
 
+import org.granat.processors.helpers.IHelper;
 import org.granat.processors.helpers.density_vector.HelperDensity;
 import org.granat.processors.helpers.density_vector.HelperDensitySlice;
-import org.granat.processors.helpers.IHelper;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;

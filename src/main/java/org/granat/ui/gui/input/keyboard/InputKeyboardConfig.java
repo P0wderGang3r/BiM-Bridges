@@ -1,7 +1,6 @@
 package org.granat.ui.gui.input.keyboard;
 
 import lombok.Getter;
-import org.granat.ui.gui.input.keyboard.InputKeyboardBinding;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -18,6 +17,8 @@ public class InputKeyboardConfig {
         inputMapping.put(GLFW.GLFW_KEY_W, InputKeyboardBinding.FILTER_DENSITY);
         inputMapping.put(GLFW.GLFW_KEY_E, InputKeyboardBinding.FILTER_SUPERSTRUCTURES);
         inputMapping.put(GLFW.GLFW_KEY_R, InputKeyboardBinding.FILTER_GIRDERS);
+
+        inputMapping.put(GLFW.GLFW_KEY_T, InputKeyboardBinding.ALGO_DEFLECTION);
 
         inputMapping.put(GLFW.GLFW_KEY_1, InputKeyboardBinding.SHOW_INTENSITY);
         inputMapping.put(GLFW.GLFW_KEY_2, InputKeyboardBinding.SHOW_DENSITY);

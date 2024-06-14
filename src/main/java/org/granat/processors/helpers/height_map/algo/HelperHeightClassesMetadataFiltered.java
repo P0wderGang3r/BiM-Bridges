@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Помощник анализа облака точек - разметка срезов на карте высот.
+ * Помощник анализа облака точек - фильтрация карты классов по количеству точек пространства.
  */
 public class HelperHeightClassesMetadataFiltered {
 
@@ -32,6 +32,7 @@ public class HelperHeightClassesMetadataFiltered {
         });
         med.set(med.get() / amount.get());
 
+        //Фильтруем по количеству точек пространства - меньшее, чем среднее отсекается.
         for (int index = 0; index < heightMapClasses.get("classes"); index++) {
             if (heightMapClasses.get("class-amount-" + index) == null) continue;
             if (heightMapClasses.get("class-amount-" + index) <= med.get()) continue;

@@ -1,10 +1,8 @@
 package org.granat.ui.gui.render;
 
 import lombok.Getter;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Platform;
 

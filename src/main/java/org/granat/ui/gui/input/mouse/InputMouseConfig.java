@@ -1,7 +1,6 @@
 package org.granat.ui.gui.input.mouse;
 
 import lombok.Getter;
-import org.granat.ui.gui.input.mouse.InputMouseBinding;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;

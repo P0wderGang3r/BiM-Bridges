@@ -2,7 +2,8 @@ package org.granat.processors.helpers.height_map.base;
 
 import org.granat.scene.objects.Point;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Stream;

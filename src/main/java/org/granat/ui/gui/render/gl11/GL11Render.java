@@ -7,11 +7,12 @@ import org.granat.ui.gui.render.IRender;
 import org.granat.ui.gui.render.Window;
 import org.granat.ui.gui.render.gl11.utils.*;
 import org.granat.ui.gui.runtime.State;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.Objects;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class GL11Render implements IRender {

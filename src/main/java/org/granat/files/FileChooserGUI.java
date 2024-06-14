@@ -1,7 +1,5 @@
 package org.granat.files;
 
-import org.granat.files.IFileChooser;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;

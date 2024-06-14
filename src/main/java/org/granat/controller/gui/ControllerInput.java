@@ -2,7 +2,6 @@ package org.granat.controller.gui;
 
 
 import lombok.Getter;
-import org.granat.ui.gui.input.*;
 import org.granat.ui.gui.input.keyboard.InputKeyboard;
 import org.granat.ui.gui.input.keyboard.InputKeyboardBinding;
 import org.granat.ui.gui.input.keyboard.InputKeyboardConfig;

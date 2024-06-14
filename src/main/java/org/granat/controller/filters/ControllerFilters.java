@@ -32,6 +32,11 @@ public record ControllerFilters(
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+            return;
+        }
         System.out.println("ENDED DENSITY PREPROCESS: " + this.getClass());
     }
 
@@ -41,6 +46,11 @@ public record ControllerFilters(
             Processors.DENSITY.process(controllerScene);
         } catch (Exception exception) {
             exception.printStackTrace();
+        }
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+            return;
         }
         System.out.println("ENDED DENSITY FILTER: " + this.getClass());
     }
@@ -52,13 +62,12 @@ public record ControllerFilters(
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        System.out.println("ENDED SUPERSTRUCTURES FILTER: " + this.getClass());
-
         try {
-            Thread.sleep(2500);
+            Thread.sleep(500);
         } catch (Exception e) {
             return;
         }
+        System.out.println("ENDED SUPERSTRUCTURES FILTER: " + this.getClass());
     }
 
     public void runFilterGirders() {
@@ -68,13 +77,12 @@ public record ControllerFilters(
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        System.out.println("ENDED GIRDERS FILTER: " + this.getClass());
-
         try {
-            Thread.sleep(2500);
+            Thread.sleep(500);
         } catch (Exception e) {
             return;
         }
+        System.out.println("ENDED GIRDERS FILTER: " + this.getClass());
     }
 
     public void runAlgoDeflection() {
@@ -83,6 +91,11 @@ public record ControllerFilters(
             Processors.DEFLECTION.process(controllerScene);
         } catch (Exception exception) {
             exception.printStackTrace();
+        }
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+            return;
         }
         System.out.println("ENDED DEFLECTION ALGO: " + this.getClass());
     }

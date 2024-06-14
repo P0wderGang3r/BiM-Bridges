@@ -1,6 +1,5 @@
 package org.granat.wrapper.e57;
 
-import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.Structure.FieldOrder;
 

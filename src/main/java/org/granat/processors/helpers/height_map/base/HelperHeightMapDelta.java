@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Помощник анализа облака точек - вычисление карты высот.
+ * Помощник анализа облака точек - вычисление изменения карты высот.
  */
 public class HelperHeightMapDelta {
 

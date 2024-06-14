@@ -1,11 +1,8 @@
 package org.granat.ui.gui.runtime;
 
 
-import lombok.Getter;
 import org.granat.ui.gui.render.Window;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
@@ -28,7 +25,7 @@ public class Server implements Runnable {
 
     private int currentPendingAwaitStatus = 0;
 
-    private final int maxPendingAwaitStatus = 2 * tickrate;
+    private final int maxPendingAwaitStatus = tickrate / 4;
 
     public void doNothing() { }
 

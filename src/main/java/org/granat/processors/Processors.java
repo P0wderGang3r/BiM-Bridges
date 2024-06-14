@@ -8,17 +8,14 @@ import org.granat.processors.filters.FilterSuperstructures;
 import org.granat.processors.filters.IFilter;
 import org.granat.scene.objects.Point;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public enum Processors {
     EMPTY {
-
         @Override
         public void setParameters(Map<String, Double> parameters) { }
 
@@ -136,7 +133,12 @@ public enum Processors {
         final IFilter processor = AlgoDeflection::run;
 
         private void initParameters(ControllerScene controllerScene) {
-            //TODO: ВАЖНО!!
+            parameters.putIfAbsent("rows", 500.0);
+            parameters.putIfAbsent("cols", 500.0);
+            parameters.putIfAbsent("axis-row", 0.0);
+            parameters.putIfAbsent("axis-col", 1.0);
+            parameters.putIfAbsent("axis-val", 2.0);
+            parameters.putIfAbsent("norm", controllerScene.getMaxBoundDivider());
         }
 
         public void setParameters(Map<String, Double> parameters) { }
@@ -147,7 +149,14 @@ public enum Processors {
         @Override
         public void process(ControllerScene controllerScene) {
             initParameters(controllerScene);
-            processor.run(controllerScene::getPointsStream, parameters);
+            controllerScene.getPointsStream().map(Point::getGirdersParameterValue).distinct()
+                    .filter(value -> value > -1).forEach(value -> {
+                parameters.put("class", value.doubleValue());
+                Supplier<Stream<Point>> pointsStreams = () ->
+                        controllerScene.getPointsStream().filter(point -> point.getGirdersParameterValue() == value);
+                processor.run(pointsStreams, parameters);
+            });
+            parameters.remove("class");
         }
     };
 

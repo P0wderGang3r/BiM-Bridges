@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Помощник анализа облака точек - разметка срезов на карте высот.
+ * Помощник анализа облака точек - разметка классов плоскостей на карте высот.
  */
 public class HelperHeightMapClasses {
 

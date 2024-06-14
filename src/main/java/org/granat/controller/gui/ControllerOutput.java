@@ -56,6 +56,12 @@ public record ControllerOutput(
                                 controllerScene::resetColorGradationGirders));
                 break;
 
+            case ALGO_DEFLECTION:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerFilters::runAlgoDeflection));
+                break;
+
             case SHOW_INTENSITY:
                 controllerServer.setPendingOperation(
                         State.RUNNING,

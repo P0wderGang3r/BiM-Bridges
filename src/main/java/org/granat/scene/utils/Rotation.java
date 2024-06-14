@@ -1,7 +1,5 @@
 package org.granat.scene.utils;
 
-import java.util.Arrays;
-
 public class Rotation {
     private static double[][] matrix(double alpha, double beta, double gamma) {
         double[][] rotationMatrix = new double[3][3];

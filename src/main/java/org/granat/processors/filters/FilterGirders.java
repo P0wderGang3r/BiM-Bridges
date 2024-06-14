@@ -1,6 +1,6 @@
 package org.granat.processors.filters;
 
-import org.granat.processors.helpers.*;
+import org.granat.processors.helpers.IHelper;
 import org.granat.processors.helpers.height_map.algo.*;
 import org.granat.processors.helpers.height_map.base.HelperHeightMap;
 import org.granat.processors.helpers.height_map.base.HelperHeightMapBorders;
@@ -9,10 +9,8 @@ import org.granat.processors.helpers.height_map.base.HelperHeightMapDelta;
 import org.granat.scene.objects.Point;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FilterGirders {
@@ -71,7 +69,9 @@ public class FilterGirders {
                         //System.out.print(", MAX: " + heightMapClassesMetadata.get("class-max-" + currentClass.intValue()));
                         //Если точка находится на совпадающих координатах, то присваиваем класс
                         if (heightMapClassesMetadata.get("class-min-" + currentClass.intValue()) <= point.getCoordinates()[axisVal] &&
-                                heightMapClassesMetadata.get("class-max-" + currentClass.intValue()) >= point.getCoordinates()[axisVal]
+                                heightMapClassesMetadata.get("class-max-" + currentClass.intValue()) >= point.getCoordinates()[axisVal] &&
+                                heightMapGroupsMetadata.get("group-min-" + currentGroup.intValue()) <= point.getCoordinates()[axisVal] &&
+                                heightMapGroupsMetadata.get("group-max-" + currentGroup.intValue()) >= point.getCoordinates()[axisVal]
                         ) {
                             point.setLowerGirderClassValue(currentClass.intValue());
                         }
@@ -102,22 +102,12 @@ public class FilterGirders {
         //Создаётся карта классов по карте высот
         Map<String, Double> heightMapBorders = helperHeightMapBorders.run(null, data);
         data.put("height-map-borders", heightMapBorders);
-        //data.remove("height-map-delta"); heightMapDelta = null; //Высвобождение памяти
+        data.remove("height-map-delta"); heightMapDelta = null; //Высвобождение памяти
 
         //Создаётся карта классов по карте высот
         Map<String, Double> heightMapClasses = helperHeightMapClasses.run(null, data);
         data.put("height-map-classes", heightMapClasses);
-        //data.remove("height-map-borders"); heightMapBorders = null; //Высвобождение памяти
-
-        /*
-        for (int index = 0; index < 1000; index++) {
-            for (int jindex = 0; jindex < 1000; jindex++) {
-                if (heightMapClasses.get(index + "-" + jindex) != null) System.out.print(heightMapClasses.get(index + "-" + jindex).intValue());
-                else System.out.print(".");
-            }
-            System.out.println();
-        }
-         */
+        data.remove("height-map-borders"); heightMapBorders = null; //Высвобождение памяти
 
         //Составляется карта метаданных классов (количество, минимумы, максимумы)
         Map<String, Double> heightMapClassesMetadata = helperHeightMapClassesMetadata.run(null, data);
@@ -127,28 +117,20 @@ public class FilterGirders {
         Map<String, Double> heightMapClassesMetadataFiltered = helperHeightMapClassesMetadataFiltered.run(null, data);
         data.put("height-map-classes-metadata", heightMapClassesMetadataFiltered);
 
-        System.out.println(new HashSet<>(heightMapClassesMetadataFiltered.entrySet()));
-
         //Разбивается множество классов на группы по сходным высотам
         Map<String, Double> heightMapGroups = helperHeightMapGroups.run(null, data);
         data.put("height-map-groups", heightMapGroups);
-
-        System.out.println(new HashSet<>(heightMapGroups.entrySet()));
 
         //Составляется карта метаданных групп классов (количество, минимумы, максимумы)
         Map<String, Double> heightMapGroupsMetadata = helperHeightMapGroupsMetadata.run(null, data);
         data.put("height-map-groups-metadata", heightMapGroupsMetadata);
 
-        System.out.println(heightMapGroupsMetadata.entrySet().stream().map(entry -> entry.getKey().split("-")[entry.getKey().split("-").length - 1]).toList());
-
         //Выбирается множество нижних классов на приблизительно одинаковой высоте
         //Выбрать нижние поверхности балок (количество -> max != max)
-        //Map<String, Double> heightMapGroupsMetadataFiltered = helperHeightMapGroupsMetadataFiltered.run(null, data);
-        //data.remove("height-map-groups-metadata"); heightMapGroupsMetadata = null; //Высвобождение памяти
-
-        //System.out.println(new HashSet<>(heightMapGroupsMetadataFiltered.entrySet()));
+        Map<String, Double> heightMapGroupsMetadataFiltered = helperHeightMapGroupsMetadataFiltered.run(null, data);
+        data.remove("height-map-groups-metadata"); heightMapGroupsMetadata = null; //Высвобождение памяти
 
         //Разметить точки в соответствии с извлечённой информацией
-        filter(pointsStreams, parameters, heightMap, heightMapClasses, heightMapClassesMetadata, heightMapGroups, heightMapGroupsMetadata);
+        filter(pointsStreams, parameters, heightMap, heightMapClasses, heightMapClassesMetadata, heightMapGroups, heightMapGroupsMetadataFiltered);
     }
 }

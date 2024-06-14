@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Помощник анализа облака точек - очищение выбросов с карты высот.
+ * Помощник анализа облака точек - группировка классов по высоте.
  */
 public class HelperHeightGroups {
 

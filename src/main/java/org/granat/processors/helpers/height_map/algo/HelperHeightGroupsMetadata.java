@@ -10,12 +10,16 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * Помощник анализа облака точек - разметка срезов на карте высот.
+ * Помощник анализа облака точек - извлечение метаданных из групп классов.
  */
 public class HelperHeightGroupsMetadata {
 
     private static final String groupMedRegex = "/(group-med-)[0-9]+/gm";
 
+    /**
+     * Вычисление порядка классов по высоте.
+     * @deprecated
+     */
     private static Map<String, Double> buildGroupsMetadataSortedMap(
             Map<String, Double> heightMapGroupsMetadata) {
         Map<String, Double> groupsMetadataSorted = new HashMap<>();
