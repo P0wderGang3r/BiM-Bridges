@@ -2,6 +2,7 @@ package org.granat.processors.algo;
 
 import org.granat.processors.helpers.IHelper;
 import org.granat.processors.helpers.deflection_points.HelperDeflectionPoints;
+import org.granat.processors.helpers.height_map.HelperHeightMapClassify;
 import org.granat.processors.helpers.height_map.base.HelperHeightMap;
 import org.granat.scene.objects.Point;
 
@@ -76,6 +77,8 @@ public class AlgoDeflection {
         }
 
          */
+
+        HelperHeightMapClassify.run(pointsStreamSupplier, data);
 
         calculateDeflection(parameters, deflectionPoints);
     }

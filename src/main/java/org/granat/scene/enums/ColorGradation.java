@@ -36,11 +36,10 @@ public enum ColorGradation {
     SUPERSTRUCTURES {
         /**
          * Цветовая окраска точки в зависимости от количества точек в срезах по трём измерениям.
-         * @param parameters [0] - максимальное количество точек в срезе.
+         * @param ignored [0] - максимальное количество точек в срезе.
          */
         @Override
-        public void setColor(Point point, double[] parameters) {
-            if (parameters.length == 0 || parameters[0] == 0) return;
+        public void setColor(Point point, double[] ignored) {
             int currentColorBit = 7 - (int) point.getSuperstructuresParameterValue();
             point.getColor()[0] = currentColorBit % 2;
             currentColorBit /= 2;
@@ -52,11 +51,10 @@ public enum ColorGradation {
     GIRDERS {
         /**
          * Цветовая окраска точки в зависимости от количества точек в срезах по трём измерениям.
-         * @param parameters [0] - максимальное количество точек в срезе.
+         * @param ignored [0] - максимальное количество точек в срезе.
          */
         @Override
-        public void setColor(Point point, double[] parameters) {
-            if (parameters.length == 0 || parameters[0] == 0) return;
+        public void setColor(Point point, double[] ignored) {
             int originalColorBit = 1 + (int) point.getGirdersParameterValue();
             int currentColorBit = 1 + (int) point.getGirdersParameterValue();
             point.getColor()[0] = (double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005;
@@ -64,6 +62,24 @@ public enum ColorGradation {
             point.getColor()[1] = (double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005;
             currentColorBit /= 2;
             point.getColor()[2] = (double) (currentColorBit % 2) * 0.5 + (double) originalColorBit * 0.005;
+        }
+    },
+    GIRDERS_HEIGHT {
+        /**
+         * Цветовая окраска точки в зависимости от количества точек в срезах по трём измерениям.
+         * @param ignored [0] - максимальное количество точек в срезе.
+         */
+        @Override
+        public void setColor(Point point, double[] ignored) {
+            if (point.getGirdersHeightParameterValue() == 0) {
+                point.getColor()[0] = 0.0;
+                point.getColor()[1] = 0.0;
+                point.getColor()[2] = 0.0;
+                return;
+            }
+            point.getColor()[0] = (1000d - point.getGirdersHeightParameterValue()) / 1000d;
+            point.getColor()[1] = (point.getGirdersHeightParameterValue()) / 1000d;
+            point.getColor()[2] = 0;
         }
     };
 

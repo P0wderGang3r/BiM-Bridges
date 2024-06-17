@@ -16,6 +16,8 @@ public class Point {
     private final static byte superstructuresPosition = 1;
     @Getter
     private final static byte girdersPosition = 2;
+    @Getter
+    private final static byte girdersHeightPosition = 3;
 
     //?-------------------------------------------------------------------------------------------------------------DATA
 
@@ -76,10 +78,17 @@ public class Point {
         return -1;
     }
 
+    public long getGirdersHeightParameterValue() {
+        if (this.parameters != null && this.parameters.length > girdersHeightPosition)
+            return parameters[girdersHeightPosition];
+        return 0;
+    }
+
     public boolean getFilterValue(int position) {
         if (position > -1 && this.filters != null && this.filters.length > position)
             return filters[position];
-        return true;
+        if (position == -1) return true;
+        return false;
     }
 
     public double getParameterValue(int position) {
@@ -162,5 +171,13 @@ public class Point {
 
     public void setLowerGirderClassValue(int value) {
         setParameterValue(girdersPosition, value);
+    }
+
+    public void setGirderHeightValue(long value) {
+        setParameterValue(girdersHeightPosition, value);
+    }
+
+    public void setGirderHeightValue(boolean value) {
+        setFilterValue(girdersHeightPosition, value);
     }
 }

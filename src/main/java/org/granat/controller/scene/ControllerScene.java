@@ -120,20 +120,18 @@ public record ControllerScene(Scene scene) {
 
     public void setColorGradationSuperstructures() {
         this.scene.setColorGradationSuperstructures();
-        double[] parameters = new double[] {this.scene.getSceneSuperstructuresParameterValue()};
         this.scene.getPointClouds().stream()
                 .map(PointCloud::getPoints)
                 .flatMap(Arrays::stream)
-                .forEach(point -> ColorGradation.SUPERSTRUCTURES.setColor(point, parameters));
+                .forEach(point -> ColorGradation.SUPERSTRUCTURES.setColor(point, null));
     }
 
     public void resetColorGradationSuperstructures() {
         if (this.scene.getCurrentColorGradation() != Scene.getColorGradationSuperstructures()) return;
-        double[] parameters = new double[] {this.scene.getSceneSuperstructuresParameterValue()};
         this.scene.getPointClouds().stream()
                 .map(PointCloud::getPoints)
                 .flatMap(Arrays::stream)
-                .forEach(point -> ColorGradation.SUPERSTRUCTURES.setColor(point, parameters));
+                .forEach(point -> ColorGradation.SUPERSTRUCTURES.setColor(point, null));
     }
 
 
@@ -141,20 +139,37 @@ public record ControllerScene(Scene scene) {
 
     public void setColorGradationGirders() {
         this.scene.setColorGradationGirders();
-        double[] parameters = new double[] {this.scene.getSceneGirdersParameterValue()};
         this.scene.getPointClouds().stream()
                 .map(PointCloud::getPoints)
                 .flatMap(Arrays::stream)
-                .forEach(point -> ColorGradation.GIRDERS.setColor(point, parameters));
+                .forEach(point -> ColorGradation.GIRDERS.setColor(point, null));
     }
 
     public void resetColorGradationGirders() {
         if (this.scene.getCurrentColorGradation() != Scene.getColorGradationGirders()) return;
-        double[] parameters = new double[] {this.scene.getSceneGirdersParameterValue()};
         this.scene.getPointClouds().stream()
                 .map(PointCloud::getPoints)
                 .flatMap(Arrays::stream)
-                .forEach(point -> ColorGradation.GIRDERS.setColor(point, parameters));
+                .forEach(point -> ColorGradation.GIRDERS.setColor(point, null));
+    }
+
+
+    //---------------------------------------------------------------------------ВЫСОТА БАЛКИ ПРОЛЁТОВ МОСТОВЫХ СТРОЕНИЙ
+
+    public void setColorGradationGirdersHeight() {
+        this.scene.setColorGradationGirdersHeight();
+        this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream)
+                .forEach(point -> ColorGradation.GIRDERS_HEIGHT.setColor(point, null));
+    }
+
+    public void resetColorGradationGirdersHeight() {
+        if (this.scene.getCurrentColorGradation() != Scene.getColorGradationGirdersHeight()) return;
+        this.scene.getPointClouds().stream()
+                .map(PointCloud::getPoints)
+                .flatMap(Arrays::stream)
+                .forEach(point -> ColorGradation.GIRDERS_HEIGHT.setColor(point, null));
     }
 
 
@@ -179,6 +194,10 @@ public record ControllerScene(Scene scene) {
 
     public void setDensityFilter() {
         this.scene.setDensityFilter();
+    }
+
+    public void setGirdersHeightFilter() {
+        this.scene.setGirdersHeightFilter();
     }
 
     public int getCurrentFilter() {

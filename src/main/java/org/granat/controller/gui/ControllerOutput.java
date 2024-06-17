@@ -59,7 +59,8 @@ public record ControllerOutput(
             case ALGO_DEFLECTION:
                 controllerServer.setPendingOperation(
                         State.RUNNING,
-                        List.of(controllerFilters::runAlgoDeflection));
+                        List.of(controllerFilters::runAlgoDeflection,
+                                controllerScene::resetColorGradationGirdersHeight));
                 break;
 
             case SHOW_INTENSITY:
@@ -82,6 +83,11 @@ public record ControllerOutput(
                         State.RUNNING,
                         List.of(controllerScene::setColorGradationGirders));
                 break;
+            case SHOW_GIRDERS_HEIGHT:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setColorGradationGirdersHeight));
+                break;
 
             case SHOW_FILTER_EMPTY:
                 controllerServer.setPendingOperation(
@@ -92,6 +98,11 @@ public record ControllerOutput(
                 controllerServer.setPendingOperation(
                         State.RUNNING,
                         List.of(controllerScene::setDensityFilter));
+                break;
+            case SHOW_FILTER_GIRDERS_HEIGHT:
+                controllerServer.setPendingOperation(
+                        State.RUNNING,
+                        List.of(controllerScene::setGirdersHeightFilter));
                 break;
             default:
                 break;
