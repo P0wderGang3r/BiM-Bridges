@@ -121,11 +121,17 @@ public class HelperDeflectionPoints {
         Map<String, Double> deflectionPoints = new HashMap<>(3);
 
         double start = 0.0;
+        double startMid = 0.0;
         double end = 0.0;
+        double midEnd = 0.0;
         double mid = 0.0;
         int startCounter = 0;
+        int startMidCounter = 0;
         int endCounter = 0;
+        int midEndCounter = 0;
         int midCounter = 0;
+
+        int amountCenter = (int) Math.sqrt((double) amountBorder * 2.0);
 
         //Начало
         for (int indexRow = heightMapCorners.get("top-row").intValue();
@@ -154,7 +160,6 @@ public class HelperDeflectionPoints {
         //Координаты середины
         int midCenterRow = (heightMapCorners.get("bottom-row").intValue() + heightMapCorners.get("top-row").intValue()) / 2;
         int midCenterCol = (heightMapCorners.get("right-col").intValue() + heightMapCorners.get("left-col").intValue()) / 2;
-        int amountCenter = (int) Math.sqrt((double) amountBorder * 2.0);
 
         for (int indexRow = midCenterRow - amountCenter; indexRow <= midCenterRow + amountCenter; indexRow++) {
             for (int indexCol = midCenterCol - amountCenter; indexCol <= midCenterCol + amountCenter; indexCol++) {
@@ -165,9 +170,43 @@ public class HelperDeflectionPoints {
             }
         }
 
+        //Координаты начала - середины
+        int startMidCenterRow = (heightMapCorners.get("top-row").intValue() + midCenterRow) / 2;
+        int startMidCenterCol = (midCenterCol + heightMapCorners.get("left-col").intValue()) / 2;
+
+        for (int indexRow = startMidCenterRow - amountCenter; indexRow <= startMidCenterRow + amountCenter; indexRow++) {
+            for (int indexCol = startMidCenterCol - amountCenter; indexCol <= startMidCenterCol + amountCenter; indexCol++) {
+                if (heightMap.get(indexRow + "-" + indexCol) != null) {
+                    startMid += heightMap.get(indexRow + "-" + indexCol);
+                    startMidCounter++;
+                }
+            }
+        }
+
+        //Координаты середины - конца
+        int midEndCenterRow = (midCenterRow + heightMapCorners.get("bottom-row").intValue()) / 2;
+        int midEndCenterCol = (heightMapCorners.get("right-col").intValue() + midCenterCol) / 2;
+
+        for (int indexRow = midEndCenterRow - amountCenter; indexRow <= midEndCenterRow + amountCenter; indexRow++) {
+            for (int indexCol = midEndCenterCol - amountCenter; indexCol <= midEndCenterCol + amountCenter; indexCol++) {
+                if (heightMap.get(indexRow + "-" + indexCol) != null) {
+                    midEnd += heightMap.get(indexRow + "-" + indexCol);
+                    midEndCounter++;
+                }
+            }
+        }
+
+        /*
+        System.out.println("COORDINATES");
+        System.out.println(" " + heightMapCorners.get("top-row").intValue() + " " + startMidCenterRow + " " + midCenterRow + " " + midEndCenterRow + " " + heightMapCorners.get("bottom-row"));
+        System.out.println(" " + heightMapCorners.get("left-col").intValue() + " " + startMidCenterCol + " " + midCenterCol + " " + midEndCenterCol + " " + heightMapCorners.get("right-col"));
+        */
+
         deflectionPoints.put("start", start / (double) startCounter);
-        deflectionPoints.put("end", end / (double) endCounter);
+        deflectionPoints.put("start-mid", startMid / (double) startMidCounter);
         deflectionPoints.put("mid", mid / (double) midCounter);
+        deflectionPoints.put("mid-end", midEnd / (double) midEndCounter);
+        deflectionPoints.put("end", end / (double) endCounter);
 
         return deflectionPoints;
     }

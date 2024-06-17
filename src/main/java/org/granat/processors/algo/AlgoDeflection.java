@@ -40,15 +40,20 @@ public class AlgoDeflection {
     ) {
         Double girderClass = parameters.get("class");
         Double start = deflectionPoints.get("start");
+        Double startMid = deflectionPoints.get("start-mid");
         Double mid = deflectionPoints.get("mid");
+        Double midEnd = deflectionPoints.get("mid-end");
         Double end = deflectionPoints.get("end");
-        if (girderClass == null || start == null || end == null || mid == null) return;
-        if (girderClass.isNaN() || start.isNaN() || end.isNaN() || mid.isNaN()) return;
+
+        if (girderClass == null || start == null || end == null || mid == null || startMid == null || midEnd == null) return;
+        if (girderClass.isNaN() || start.isNaN() || end.isNaN() || mid.isNaN() || startMid.isNaN() || midEnd.isNaN()) return;
 
         double result = mid - ((start + end) / 2);
+        double resultStartMid = startMid - (start * 3 / 4 + end / 4);
+        double resultMidEnd = midEnd - (start / 4 + end * 3 / 4);
 
         System.out.println();
-        System.out.println(start + " " + mid + " " + end);
+        System.out.println(start + " " + startMid + " " + mid + " " + midEnd + " " + end);
         System.out.println(Arrays.toString(getColor(girderClass.intValue())) + " = " + result);
     }
 
